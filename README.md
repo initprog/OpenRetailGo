@@ -1,16 +1,17 @@
 OpenRetailGo
 ============
 
-Proyek ini berusaha melanjutkan perkembangan dari [OpenRetail](https://github.com/rudi-krsoftware/open-retail) yang sudah tidak lagi mengeluarkan source codenya.
+Awalnya proyek ini digunakan untuk memperlajari [OpenRetail](https://github.com/rudi-krsoftware/open-retail) kemudian berusaha mengembangkan dan menambah fitur baru. Sampai saat ini kita masih belajari pernak-pernik OpenRetail mulai dari komponen yang dipakai, struktur kodingnya dan fitur lainnya.
 
-Tujuan OpenRetailGo
+Programming Language: C#
+Framework: .NET WinForm
+Supported DB: postgreSQL
+Operating System: Windows 10
+
+Perkembangan 
 -------------------
-1. Upgrade komponents
-2. Tambah fitur baru
-3. Pembetulan "bugs"
-
-## Status
-Masih banyak kerjaan. Ayuk siapa yang mau bantu silahkan :)
+* Komponen partai ketiga sudah di upgrade semua
+* Versi dotnet sudah di upgrade ke 4.8.
 
 Prerequisites (Khusus software developer atau programmer)
 ---------------------------------------------------------
