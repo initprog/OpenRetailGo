@@ -11,6 +11,9 @@ namespace OpenRetailGo.WebAPI
 {
     public class AutoMapperConfig
     {
+        /// TODO - Mapper.Initialize() need to be updated
+        /// Reference: https://forums.asp.net/t/2157261.aspx?Automapper+8+1+1+how+to+configure
+        
         public static void Initialize()
         {
             Mapper.Initialize((config) =>

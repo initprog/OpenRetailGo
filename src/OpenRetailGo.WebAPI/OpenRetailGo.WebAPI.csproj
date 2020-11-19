@@ -54,9 +54,8 @@
     <Reference Include="Dapper.Contrib, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Dapper.Contrib.2.0.35\lib\net461\Dapper.Contrib.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation, Version=5.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FluentValidation.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="FluentValidation">
+      <HintPath>..\..\lib\FluentValidation.5.6.1.0\lib\Net45\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
