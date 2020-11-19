@@ -40,14 +40,14 @@ namespace OpenRetailGo.Repository.Service
         public DapperContext()
         {
             DbConnectionStringBuilder builder = new DbConnectionStringBuilder();
-            var server = ConfigurationManager.AppSettings["server"];
-            var port = ConfigurationManager.AppSettings["port"];
-            var dbName = ConfigurationManager.AppSettings["dbName"];
-            var passfile = ConfigurationManager.AppSettings["passfile"];
-            var userId = "postgres";
+            builder.Add("Server", ConfigurationManager.AppSettings["server"]);
+            builder.Add("Port", ConfigurationManager.AppSettings["port"]);
+            builder.Add("User Id", "postgres");
+            builder.Add("Passfile", ConfigurationManager.AppSettings["passfile"]);
+            builder.Add("Database", ConfigurationManager.AppSettings["dbName"]);
 
             _providerName = "Npgsql";
-            _connectionString = string.Format("Server={0};Port={1};User Id={2};Passfile={3};Database={4}", server, port, userId, passfile, dbName);
+            _connectionString = builder.ConnectionString;
 
             if (_db == null)
             {
