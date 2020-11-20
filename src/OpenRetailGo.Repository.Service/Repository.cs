@@ -77,7 +77,8 @@ namespace OpenRetailGo.Repository.Service
         {
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<TEntity>();
+                string sql = $"SELECT * FROM {_tableName} WHERE {predicate.ToString()}";
+                return await connection.QueryAsync<TEntity>(sql);
             }
         }
 
@@ -85,7 +86,8 @@ namespace OpenRetailGo.Repository.Service
         {
             using (var connection = CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<TEntity>();
+                string sql = $"SELECT * FROM {_tableName} WHERE {predicate.ToString()}";
+                return await connection.QuerySingleOrDefaultAsync<TEntity>(sql);
             }
         }
 
@@ -113,6 +115,18 @@ namespace OpenRetailGo.Repository.Service
             {
                 await connection.ExecuteAsync(insertQuery, t);
             }
+        }
+
+        public async Task<int> AddRangeAsync(IEnumerable<TEntity> list)
+        {
+            var inserted = 0;
+            var query = GenerateInsertQuery();
+            using (var connection = CreateConnection())
+            {
+                inserted += await connection.ExecuteAsync(query, list);
+            }
+
+            return inserted;
         }
 
         private string GenerateInsertQuery()
@@ -165,11 +179,6 @@ namespace OpenRetailGo.Repository.Service
 
             return updateQuery.ToString();
         }
-        
-        public abstract Task AddRangeAsync(IEnumerable<TEntity> entities);
-
-        
-        public abstract Task RemoveRangeAsync(IEnumerable<TEntity> entities);
 
         public async Task RemoveAsync(Guid id)
         {
@@ -181,19 +190,16 @@ namespace OpenRetailGo.Repository.Service
 
         public async Task RemoveAsync(TEntity entity)
         {
-
-        }
-
-        public async Task<int> SaveRangeAsync(IEnumerable<TEntity> list)
-        {
-            var inserted = 0;
-            var query = GenerateInsertQuery();
             using (var connection = CreateConnection())
             {
-                inserted += await connection.ExecuteAsync(query, list);
             }
+        }
 
-            return inserted;
+        public async Task RemoveRangeAsync(IEnumerable<TEntity> entities)
+        {
+            using (var connection = CreateConnection())
+            {
+            }
         }
     }
 }

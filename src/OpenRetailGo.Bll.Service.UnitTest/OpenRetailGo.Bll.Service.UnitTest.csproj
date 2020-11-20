@@ -173,6 +173,7 @@
     <Compile Include="Pengaturan\RolePrivilegeBllTest.cs" />
     <Compile Include="Pengaturan\SettingAplikasiBllTest.cs" />
     <Compile Include="Referensi\SupplierBllTest.cs" />
+    <Compile Include="GenericRepoTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -190,6 +191,14 @@
     <ProjectReference Include="..\OpenRetailGo.Model\OpenRetailGo.Model.csproj">
       <Project>{6b9cabad-1a6c-4323-8548-bd5f3c12613c}</Project>
       <Name>OpenRetailGo.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRetailGo.Repository.Api\OpenRetailGo.Repository.Api.csproj">
+      <Project>{981af3c6-f601-45ad-9f33-abbc7cc1f00f}</Project>
+      <Name>OpenRetailGo.Repository.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRetailGo.Repository.Service\OpenRetailGo.Repository.Service.csproj">
+      <Project>{ffef9dee-c608-4160-baec-1723185677f6}</Project>
+      <Name>OpenRetailGo.Repository.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

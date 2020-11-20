@@ -15,16 +15,12 @@ namespace OpenRetailGo.Repository.Api
         Task<TEntity> SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
 
         Task AddAsync(TEntity entity);
-        Task AddRangeAsync(IEnumerable<TEntity> entities);
+        Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
 
         Task RemoveAsync(Guid id);
         Task RemoveAsync(TEntity entity);
         Task RemoveRangeAsync(IEnumerable<TEntity> entities);
         
-        /* Update and save operations are not Repository responsibility.
-         * They should be handled in UnitOfWork.
-        Task<int> SaveRangeAsync(IEnumerable<TEntity> list);
-        Task UpdateAsync(TEntity t);
-        */
+        Task UpdateAsync(TEntity entity);
     }
 }
