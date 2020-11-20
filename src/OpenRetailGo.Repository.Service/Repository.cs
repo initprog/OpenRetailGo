@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,11 @@ namespace OpenRetailGo.Repository.Service
 {
     /// <summary>
     /// https://itnext.io/generic-repository-pattern-using-dapper-bd48d9cd7ead
+    /// https://programmingwithmosh.com/net/common-mistakes-with-the-repository-pattern/
     /// 3-tier https://github.com/maoqyhz/3-Tier-Architecture-using-dapper
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
+    /// <typeparam name="TEntity"></typeparam>
+    public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly string _tableName;
 
@@ -49,29 +51,13 @@ namespace OpenRetailGo.Repository.Service
             return conn;
         }
 
-        private IEnumerable<PropertyInfo> GetProperties => typeof(T).GetProperties();
+        private IEnumerable<PropertyInfo> GetProperties => typeof(TEntity).GetProperties();
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<TEntity> GetAsync(Guid id)
         {
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<T>($"SELECT * FROM {_tableName}");
-            }
-        }
-
-        public async Task DeleteRowAsync(Guid id)
-        {
-            using (var connection = CreateConnection())
-            {
-                await connection.ExecuteAsync($"DELETE FROM {_tableName} WHERE Id=@Id", new { Id = id });
-            }
-        }
-
-        public async Task<T> GetAsync(Guid id)
-        {
-            using (var connection = CreateConnection())
-            {
-                var result = await connection.QuerySingleOrDefaultAsync<T>($"SELECT * FROM {_tableName} WHERE Id=@Id", new { Id = id });
+                var result = await connection.QuerySingleOrDefaultAsync<TEntity>($"SELECT * FROM {_tableName} WHERE Id=@Id", new { Id = id });
                 if (result == null)
                     throw new KeyNotFoundException($"{_tableName} with id [{id}] could not be found.");
 
@@ -79,17 +65,30 @@ namespace OpenRetailGo.Repository.Service
             }
         }
 
-        public async Task<int> SaveRangeAsync(IEnumerable<T> list)
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            var inserted = 0;
-            var query = GenerateInsertQuery();
             using (var connection = CreateConnection())
             {
-                inserted += await connection.ExecuteAsync(query, list);
+                return await connection.QueryAsync<TEntity>($"SELECT * FROM {_tableName}");
             }
-
-            return inserted;
         }
+
+        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            using (var connection = CreateConnection())
+            {
+                return await connection.QueryAsync<TEntity>();
+            }
+        }
+
+        public async Task<TEntity> SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        {
+            using (var connection = CreateConnection())
+            {
+                return await connection.QuerySingleOrDefaultAsync<TEntity>();
+            }
+        }
+
 
         /// <summary>
         /// Extracts a list of attribute names into List<string> using reflection. 
@@ -106,7 +105,7 @@ namespace OpenRetailGo.Repository.Service
                     select prop.Name).ToList();
         }
 
-        public async Task InsertAsync(T t)
+        public async Task AddAsync(TEntity t)
         {
             var insertQuery = GenerateInsertQuery();
 
@@ -138,7 +137,7 @@ namespace OpenRetailGo.Repository.Service
             return insertQuery.ToString();
         }
 
-        public async Task UpdateAsync(T t)
+        public async Task UpdateAsync(TEntity t)
         {
             var updateQuery = GenerateUpdateQuery();
 
@@ -165,6 +164,36 @@ namespace OpenRetailGo.Repository.Service
             updateQuery.Append(" WHERE Id=@Id");
 
             return updateQuery.ToString();
+        }
+        
+        public abstract Task AddRangeAsync(IEnumerable<TEntity> entities);
+
+        
+        public abstract Task RemoveRangeAsync(IEnumerable<TEntity> entities);
+
+        public async Task RemoveAsync(Guid id)
+        {
+            using (var connection = CreateConnection())
+            {
+                await connection.ExecuteAsync($"DELETE FROM {_tableName} WHERE Id=@Id", new { Id = id });
+            }
+        }
+
+        public async Task RemoveAsync(TEntity entity)
+        {
+
+        }
+
+        public async Task<int> SaveRangeAsync(IEnumerable<TEntity> list)
+        {
+            var inserted = 0;
+            var query = GenerateInsertQuery();
+            using (var connection = CreateConnection())
+            {
+                inserted += await connection.ExecuteAsync(query, list);
+            }
+
+            return inserted;
         }
     }
 }
