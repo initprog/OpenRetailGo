@@ -31,15 +31,15 @@ namespace OpenRetailGo.Model
 		[Display(Name = "Golongan")]
 		public string nama_golongan { get; set; }
 
+        // Untuk menentukan % diskon waktu penjualan kalau Produk.diskon kosong.
         [Display(Name = "Diskon")]
         public double diskon { get; set; }
 
-        /// <summary>
-        /// Untuk menentukan harga jual otomatis berdasarkan persentasi keuntungan
-        /// </summary>
+        // Untuk menentukan harga jual otomatis berdasarkan persentasi keuntungan pada waktu buat produk baru
         [Display(Name = "Persentase Keuntungan")]
         public double persentase_keuntungan { get; set; }
 
+        // true=Barang, false=Jasa
         public bool tipe { get; set; }
     }
 
@@ -47,7 +47,7 @@ namespace OpenRetailGo.Model
     {
         public GolonganValidator()
         {
-            CascadeMode = FluentValidation.CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.Stop;
 
 			var msgError1 = "'{PropertyName}' tidak boleh kosong !";
             var msgError2 = "Inputan '{PropertyName}' maksimal {MaxLength} karakter !";
