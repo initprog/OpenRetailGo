@@ -77,7 +77,7 @@ namespace OpenRetailGo.WebAPI.Controllers.Helper
             {
                 try
                 {
-                    ValidationContext validatorContext = null;
+                    ValidationContext<T> validatorContext = null;
 
                     if (ruleSetName.Length > 0)
                     {
