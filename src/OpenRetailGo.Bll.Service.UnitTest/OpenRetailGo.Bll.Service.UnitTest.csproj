@@ -173,7 +173,6 @@
     <Compile Include="Pengaturan\RolePrivilegeBllTest.cs" />
     <Compile Include="Pengaturan\SettingAplikasiBllTest.cs" />
     <Compile Include="Referensi\SupplierBllTest.cs" />
-    <Compile Include="GenericRepoTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

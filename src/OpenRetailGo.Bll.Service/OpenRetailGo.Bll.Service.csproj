@@ -43,7 +43,7 @@
       <HintPath>..\..\lib\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation">
-      <HintPath>..\..\lib\FluentValidation.5.6.1.0\lib\Net45\FluentValidation.dll</HintPath>
+      <HintPath>..\..\lib\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
