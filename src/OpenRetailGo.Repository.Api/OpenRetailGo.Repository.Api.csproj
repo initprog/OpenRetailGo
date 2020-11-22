@@ -45,7 +45,6 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="BaseRepository.cs" />
     <Compile Include="Referensi\IAlasanPenyesuaianStokRepository.cs" />
     <Compile Include="IBaseRepository.cs" />
     <Compile Include="Report\IReportRugiLabaRepository.cs" />
