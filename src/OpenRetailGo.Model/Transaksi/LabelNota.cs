@@ -44,7 +44,7 @@ namespace OpenRetailGo.Model
     {
         public LabelNotaValidator()
         {
-            CascadeMode = FluentValidation.CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.Stop;
 
             var msgError = "Inputan '{PropertyName}' maksimal {MaxLength} karakter !";
 

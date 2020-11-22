@@ -39,7 +39,7 @@ namespace OpenRetailGo.Model
     {
         public KartuValidator()
         {
-            CascadeMode = FluentValidation.CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.Stop;
 
 			var msgError1 = "'{PropertyName}' tidak boleh kosong !";
             var msgError2 = "Inputan '{PropertyName}' maksimal {MaxLength} karakter !";

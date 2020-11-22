@@ -64,7 +64,7 @@ namespace OpenRetailGo.WebAPI.Models.DTO
     {
         public KasbonDTOValidator()
         {
-            CascadeMode = FluentValidation.CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.Stop;
 
 			var msgError1 = "'{PropertyName}' tidak boleh kosong !";
             var msgError2 = "'{PropertyName}' maksimal {MaxLength} karakter !";					
