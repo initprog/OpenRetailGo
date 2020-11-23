@@ -1,8 +1,3 @@
-Thumbs.db
-license.txt
-GenerateMenu.cs
-ReportTest.cs
-desktop.ini
 .vs/
 *.obj
 *.exe
@@ -28,14 +23,9 @@ desktop.ini
 *.sbr
 doc/
 assets/
-blog/
-OpenRetail.T4Generator/
-TestPrint/
 obj/
 lib/
 [Rr]elease*/
 _ReSharper*/
-[Tt]est[Rr]esult*
-*.vssscc
 $tf*/
 deploy/
