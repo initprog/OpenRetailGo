@@ -63,6 +63,16 @@ namespace OpenRetailGo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Add_16x {
+            get {
+                object obj = ResourceManager.GetObject("Add_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap address16 {
             get {
                 object obj = ResourceManager.GetObject("address16", resourceCulture);
@@ -106,6 +116,16 @@ namespace OpenRetailGo.Properties {
         internal static System.Drawing.Bitmap clock32 {
             get {
                 object obj = ResourceManager.GetObject("clock32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Close_16x {
+            get {
+                object obj = ResourceManager.GetObject("Close_16x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +286,16 @@ namespace OpenRetailGo.Properties {
         internal static System.Drawing.Bitmap logofix_small {
             get {
                 object obj = ResourceManager.GetObject("logofix_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap nologo {
+            get {
+                object obj = ResourceManager.GetObject("nologo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

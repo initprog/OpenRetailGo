@@ -91,6 +91,21 @@ namespace OpenRetailGo.Pengaturan
         {
             if (KeyPressHelper.IsEnter(e))
                 Simpan();
-        }        
+        }
+
+        private void pbLogo_Click(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void btnAddLogo_Click(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void btnDelLogo_Click(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }
