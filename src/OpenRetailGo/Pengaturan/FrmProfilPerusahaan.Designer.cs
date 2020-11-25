@@ -44,26 +44,29 @@
             this.lblLogo = new System.Windows.Forms.Label();
             this.btnAddLogo = new System.Windows.Forms.Button();
             this.btnDelLogo = new System.Windows.Forms.Button();
+            this.ofdLogo = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSelesai
             // 
             this.btnSelesai.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSelesai.Location = new System.Drawing.Point(527, 439);
+            this.btnSelesai.Location = new System.Drawing.Point(461, 346);
+            this.btnSelesai.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             // 
             // btnSimpan
             // 
-            this.btnSimpan.Location = new System.Drawing.Point(380, 439);
+            this.btnSimpan.Location = new System.Drawing.Point(332, 346);
+            this.btnSimpan.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(34, 29);
+            this.label1.Location = new System.Drawing.Point(30, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(136, 20);
+            this.label1.Size = new System.Drawing.Size(105, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Nama Perusahaan";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -72,10 +75,10 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(34, 93);
+            this.label2.Location = new System.Drawing.Point(30, 70);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 20);
+            this.label2.Size = new System.Drawing.Size(46, 15);
             this.label2.TabIndex = 1;
             this.label2.Text = "Alamat";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -84,10 +87,10 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(34, 159);
+            this.label3.Location = new System.Drawing.Point(30, 119);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 20);
+            this.label3.Size = new System.Drawing.Size(33, 15);
             this.label3.TabIndex = 1;
             this.label3.Text = "Kota";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -96,10 +99,10 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(34, 223);
+            this.label4.Location = new System.Drawing.Point(30, 167);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 20);
+            this.label4.Size = new System.Drawing.Size(51, 15);
             this.label4.TabIndex = 1;
             this.label4.Text = "Telepon";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -111,12 +114,12 @@
             this.txtNamaPerusahaan.EnterFocusColor = System.Drawing.Color.White;
             this.txtNamaPerusahaan.LeaveFocusColor = System.Drawing.Color.White;
             this.txtNamaPerusahaan.LetterOnly = false;
-            this.txtNamaPerusahaan.Location = new System.Drawing.Point(38, 54);
-            this.txtNamaPerusahaan.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtNamaPerusahaan.Location = new System.Drawing.Point(33, 40);
+            this.txtNamaPerusahaan.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtNamaPerusahaan.Name = "txtNamaPerusahaan";
             this.txtNamaPerusahaan.NumericOnly = false;
             this.txtNamaPerusahaan.SelectionText = false;
-            this.txtNamaPerusahaan.Size = new System.Drawing.Size(338, 27);
+            this.txtNamaPerusahaan.Size = new System.Drawing.Size(296, 23);
             this.txtNamaPerusahaan.TabIndex = 0;
             this.txtNamaPerusahaan.Tag = "nama_profil";
             this.txtNamaPerusahaan.ThousandSeparator = false;
@@ -128,12 +131,12 @@
             this.txtAlamat.EnterFocusColor = System.Drawing.Color.White;
             this.txtAlamat.LeaveFocusColor = System.Drawing.Color.White;
             this.txtAlamat.LetterOnly = false;
-            this.txtAlamat.Location = new System.Drawing.Point(38, 118);
-            this.txtAlamat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtAlamat.Location = new System.Drawing.Point(33, 88);
+            this.txtAlamat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtAlamat.Name = "txtAlamat";
             this.txtAlamat.NumericOnly = false;
             this.txtAlamat.SelectionText = false;
-            this.txtAlamat.Size = new System.Drawing.Size(338, 27);
+            this.txtAlamat.Size = new System.Drawing.Size(296, 23);
             this.txtAlamat.TabIndex = 1;
             this.txtAlamat.Tag = "alamat";
             this.txtAlamat.ThousandSeparator = false;
@@ -145,12 +148,12 @@
             this.txtKota.EnterFocusColor = System.Drawing.Color.White;
             this.txtKota.LeaveFocusColor = System.Drawing.Color.White;
             this.txtKota.LetterOnly = false;
-            this.txtKota.Location = new System.Drawing.Point(38, 184);
-            this.txtKota.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtKota.Location = new System.Drawing.Point(33, 138);
+            this.txtKota.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtKota.Name = "txtKota";
             this.txtKota.NumericOnly = false;
             this.txtKota.SelectionText = false;
-            this.txtKota.Size = new System.Drawing.Size(338, 27);
+            this.txtKota.Size = new System.Drawing.Size(296, 23);
             this.txtKota.TabIndex = 2;
             this.txtKota.Tag = "kota";
             this.txtKota.ThousandSeparator = false;
@@ -162,12 +165,12 @@
             this.txtTelepon.EnterFocusColor = System.Drawing.Color.White;
             this.txtTelepon.LeaveFocusColor = System.Drawing.Color.White;
             this.txtTelepon.LetterOnly = false;
-            this.txtTelepon.Location = new System.Drawing.Point(38, 244);
-            this.txtTelepon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtTelepon.Location = new System.Drawing.Point(33, 183);
+            this.txtTelepon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtTelepon.Name = "txtTelepon";
             this.txtTelepon.NumericOnly = false;
             this.txtTelepon.SelectionText = false;
-            this.txtTelepon.Size = new System.Drawing.Size(163, 27);
+            this.txtTelepon.Size = new System.Drawing.Size(143, 23);
             this.txtTelepon.TabIndex = 3;
             this.txtTelepon.Tag = "telepon";
             this.txtTelepon.ThousandSeparator = false;
@@ -176,10 +179,10 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(34, 284);
+            this.label5.Location = new System.Drawing.Point(30, 213);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 20);
+            this.label5.Size = new System.Drawing.Size(36, 15);
             this.label5.TabIndex = 4;
             this.label5.Text = "Email";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -188,10 +191,10 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(34, 350);
+            this.label6.Location = new System.Drawing.Point(30, 262);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(66, 20);
+            this.label6.Size = new System.Drawing.Size(53, 15);
             this.label6.TabIndex = 4;
             this.label6.Text = "Website";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -203,12 +206,12 @@
             this.txtEmail.EnterFocusColor = System.Drawing.Color.White;
             this.txtEmail.LeaveFocusColor = System.Drawing.Color.White;
             this.txtEmail.LetterOnly = false;
-            this.txtEmail.Location = new System.Drawing.Point(38, 309);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtEmail.Location = new System.Drawing.Point(33, 232);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.NumericOnly = false;
             this.txtEmail.SelectionText = false;
-            this.txtEmail.Size = new System.Drawing.Size(338, 27);
+            this.txtEmail.Size = new System.Drawing.Size(296, 23);
             this.txtEmail.TabIndex = 4;
             this.txtEmail.Tag = "email";
             this.txtEmail.ThousandSeparator = false;
@@ -220,12 +223,12 @@
             this.txtWebsite.EnterFocusColor = System.Drawing.Color.White;
             this.txtWebsite.LeaveFocusColor = System.Drawing.Color.White;
             this.txtWebsite.LetterOnly = false;
-            this.txtWebsite.Location = new System.Drawing.Point(38, 375);
-            this.txtWebsite.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtWebsite.Location = new System.Drawing.Point(33, 281);
+            this.txtWebsite.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtWebsite.Name = "txtWebsite";
             this.txtWebsite.NumericOnly = false;
             this.txtWebsite.SelectionText = false;
-            this.txtWebsite.Size = new System.Drawing.Size(338, 27);
+            this.txtWebsite.Size = new System.Drawing.Size(296, 23);
             this.txtWebsite.TabIndex = 5;
             this.txtWebsite.Tag = "website";
             this.txtWebsite.ThousandSeparator = false;
@@ -234,9 +237,11 @@
             // pbLogo
             // 
             this.pbLogo.Image = global::OpenRetailGo.Properties.Resources.nologo;
-            this.pbLogo.Location = new System.Drawing.Point(425, 54);
+            this.pbLogo.Location = new System.Drawing.Point(372, 40);
+            this.pbLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(200, 200);
+            this.pbLogo.Size = new System.Drawing.Size(150, 150);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLogo.TabIndex = 6;
             this.pbLogo.TabStop = false;
             this.pbLogo.Click += new System.EventHandler(this.btnAddLogo_Click);
@@ -245,10 +250,10 @@
             // 
             this.lblLogo.AutoSize = true;
             this.lblLogo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLogo.Location = new System.Drawing.Point(421, 29);
+            this.lblLogo.Location = new System.Drawing.Point(368, 22);
             this.lblLogo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLogo.Name = "lblLogo";
-            this.lblLogo.Size = new System.Drawing.Size(44, 20);
+            this.lblLogo.Size = new System.Drawing.Size(34, 15);
             this.lblLogo.TabIndex = 7;
             this.lblLogo.Text = "Logo";
             this.lblLogo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -256,9 +261,10 @@
             // btnAddLogo
             // 
             this.btnAddLogo.Image = global::OpenRetailGo.Properties.Resources.Add_16x;
-            this.btnAddLogo.Location = new System.Drawing.Point(424, 265);
+            this.btnAddLogo.Location = new System.Drawing.Point(371, 199);
+            this.btnAddLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAddLogo.Name = "btnAddLogo";
-            this.btnAddLogo.Size = new System.Drawing.Size(41, 37);
+            this.btnAddLogo.Size = new System.Drawing.Size(36, 28);
             this.btnAddLogo.TabIndex = 8;
             this.btnAddLogo.UseVisualStyleBackColor = true;
             this.btnAddLogo.Click += new System.EventHandler(this.btnAddLogo_Click);
@@ -266,20 +272,26 @@
             // btnDelLogo
             // 
             this.btnDelLogo.Image = global::OpenRetailGo.Properties.Resources.Close_16x;
-            this.btnDelLogo.Location = new System.Drawing.Point(476, 265);
+            this.btnDelLogo.Location = new System.Drawing.Point(416, 199);
+            this.btnDelLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDelLogo.Name = "btnDelLogo";
-            this.btnDelLogo.Size = new System.Drawing.Size(41, 37);
+            this.btnDelLogo.Size = new System.Drawing.Size(36, 28);
             this.btnDelLogo.TabIndex = 9;
             this.btnDelLogo.UseVisualStyleBackColor = true;
             this.btnDelLogo.Click += new System.EventHandler(this.btnDelLogo_Click);
             // 
+            // ofdLogo
+            // 
+            this.ofdLogo.Filter = "Image files (*.jpg, *.png, *.bmp)|*.jpg;*.png;*.bmp";
+            this.ofdLogo.Title = "Pilih gambar logo perusahaan";
+            // 
             // FrmProfilPerusahaan
             // 
             this.AcceptButton = this.btnSimpan;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSelesai;
-            this.ClientSize = new System.Drawing.Size(669, 509);
+            this.ClientSize = new System.Drawing.Size(585, 416);
             this.Controls.Add(this.btnDelLogo);
             this.Controls.Add(this.btnAddLogo);
             this.Controls.Add(this.lblLogo);
@@ -296,7 +308,7 @@
             this.Controls.Add(this.txtTelepon);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FrmProfilPerusahaan";
             this.Text = "FrmProfilPerusahaan";
             this.Controls.SetChildIndex(this.label5, 0);
@@ -340,5 +352,6 @@
         private System.Windows.Forms.Label lblLogo;
         private System.Windows.Forms.Button btnAddLogo;
         private System.Windows.Forms.Button btnDelLogo;
+        private System.Windows.Forms.OpenFileDialog ofdLogo;
     }
 }

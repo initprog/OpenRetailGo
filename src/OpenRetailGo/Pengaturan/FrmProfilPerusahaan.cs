@@ -22,13 +22,18 @@ using OpenRetailGo.Bll.Api;
 using OpenRetailGo.Bll.Service;
 using OpenRetailGo.Helper.UI.Template;
 using OpenRetailGo.Helper;
+using System.Drawing;
+using System.IO;
 
 namespace OpenRetailGo.Pengaturan
 {
     public partial class FrmProfilPerusahaan : FrmEntryStandard
     {
         private Profil _profil = null;
-        
+        enum LogoChanged { No, YesAdd, YesDelete }
+        private LogoChanged logoStatus = LogoChanged.No;
+        private string logoPath = $"{Application.CommonAppDataPath}/logo.png";
+
         public IListener Listener { private get; set; }
 
         public FrmProfilPerusahaan(string header, Profil profil)
@@ -49,6 +54,15 @@ namespace OpenRetailGo.Pengaturan
                 txtTelepon.Text = this._profil.telepon;
                 txtEmail.Text = this._profil.email;
                 txtWebsite.Text = this._profil.website;
+
+                if (File.Exists(logoPath))
+                {
+                    pbLogo.Image = new Bitmap(logoPath);
+                }
+                else
+                {
+                    pbLogo.Image = Properties.Resources.nologo;
+                }
             }            
         }
 
@@ -69,6 +83,19 @@ namespace OpenRetailGo.Pengaturan
 
             IProfilBll bll = new ProfilBll(MainProgram.log);
             result = bll.Save(_profil, ref validationError);
+
+            if(logoStatus == LogoChanged.YesAdd)
+            {
+                Bitmap logo = new Bitmap(ofdLogo.FileName);
+                // Save company logo in PNG format with default filename "logo.png"
+                if (Path.GetExtension(ofdLogo.FileName).ToLower() != ".png")
+                {
+                    logo.Save(logoPath, System.Drawing.Imaging.ImageFormat.Png);
+                }
+            } else if (logoStatus == LogoChanged.YesDelete)
+            {
+                File.Delete(logoPath);
+            }
 
             if (result > 0) 
             {
@@ -93,19 +120,31 @@ namespace OpenRetailGo.Pengaturan
                 Simpan();
         }
 
-        private void pbLogo_Click(object sender, System.EventArgs e)
-        {
-
-        }
-
         private void btnAddLogo_Click(object sender, System.EventArgs e)
         {
+            if(ofdLogo.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    pbLogo.Image = new Bitmap(ofdLogo.FileName);
+                    logoStatus = LogoChanged.YesAdd;                    
+                }
+                catch(FileNotFoundException exf)
+                {
 
+                }
+            }
         }
 
         private void btnDelLogo_Click(object sender, System.EventArgs e)
         {
+            // Need to dispose the bitmap to release file lock
+            // so that we can delete them on Save.
+            if (File.Exists(logoPath)) pbLogo.Image.Dispose();
 
+            pbLogo.Image = Properties.Resources.nologo;
+
+            logoStatus = File.Exists(logoPath) ? LogoChanged.YesDelete : LogoChanged.No;
         }
     }
 }
