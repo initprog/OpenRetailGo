@@ -175,26 +175,46 @@ ALTER DOMAIN t_telepon OWNER TO postgres;
 
 CREATE FUNCTION f_hapus_header_bayar_hutang_produk() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE var_pembayaran_hutang_produk_id t_guid;
-DECLARE var_row_count integer;
-
-BEGIN		    
-    var_pembayaran_hutang_produk_id := OLD.pembayaran_hutang_produk_id;
-	
-    var_row_count := (select count(*) from t_item_pembayaran_hutang_produk
-                      where pembayaran_hutang_produk_id = var_pembayaran_hutang_produk_id);
-
-    IF var_row_count IS NULL THEN
-        var_row_count := 0;
-    END IF;
-	
-	IF (var_row_count = 0) THEN
-    	DELETE FROM t_pembayaran_hutang_produk WHERE pembayaran_hutang_produk_id = var_pembayaran_hutang_produk_id;
-    END IF;
-
-  	RETURN NULL;
-END;
+    AS $$
+
+DECLARE var_pembayaran_hutang_produk_id t_guid;
+
+DECLARE var_row_count integer;
+
+
+
+BEGIN		    
+
+    var_pembayaran_hutang_produk_id := OLD.pembayaran_hutang_produk_id;
+
+	
+
+    var_row_count := (select count(*) from t_item_pembayaran_hutang_produk
+
+                      where pembayaran_hutang_produk_id = var_pembayaran_hutang_produk_id);
+
+
+
+    IF var_row_count IS NULL THEN
+
+        var_row_count := 0;
+
+    END IF;
+
+	
+
+	IF (var_row_count = 0) THEN
+
+    	DELETE FROM t_pembayaran_hutang_produk WHERE pembayaran_hutang_produk_id = var_pembayaran_hutang_produk_id;
+
+    END IF;
+
+
+
+  	RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -206,26 +226,46 @@ ALTER FUNCTION public.f_hapus_header_bayar_hutang_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_hapus_header_bayar_piutang_produk() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE var_pembayaran_piutang_id t_guid;
-DECLARE var_row_count integer;
-
-BEGIN		    
-    var_pembayaran_piutang_id := OLD.pembayaran_piutang_id;
-	
-    var_row_count := (select count(*) from t_item_pembayaran_piutang_produk
-                      where pembayaran_piutang_id = var_pembayaran_piutang_id);
-
-    IF var_row_count IS NULL THEN
-        var_row_count := 0;
-    END IF;
-	
-	IF (var_row_count = 0) THEN
-    	DELETE FROM t_pembayaran_piutang_produk WHERE pembayaran_piutang_id = var_pembayaran_piutang_id;
-    END IF;
-
-  	RETURN NULL;
-END;
+    AS $$
+
+DECLARE var_pembayaran_piutang_id t_guid;
+
+DECLARE var_row_count integer;
+
+
+
+BEGIN		    
+
+    var_pembayaran_piutang_id := OLD.pembayaran_piutang_id;
+
+	
+
+    var_row_count := (select count(*) from t_item_pembayaran_piutang_produk
+
+                      where pembayaran_piutang_id = var_pembayaran_piutang_id);
+
+
+
+    IF var_row_count IS NULL THEN
+
+        var_row_count := 0;
+
+    END IF;
+
+	
+
+	IF (var_row_count = 0) THEN
+
+    	DELETE FROM t_pembayaran_piutang_produk WHERE pembayaran_piutang_id = var_pembayaran_piutang_id;
+
+    END IF;
+
+
+
+  	RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -237,119 +277,232 @@ ALTER FUNCTION public.f_hapus_header_bayar_piutang_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_kurangi_stok_produk() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE 
-	var_produk_id 				t_guid;
-
-	var_stok_sekarang 			t_jumlah; -- stok etalase	
-    var_stok_gudang_sekarang 	t_jumlah; -- stok gudang
-
-    var_jumlah_lama 		t_jumlah;
-	var_jumlah_baru 		t_jumlah;
-
-    var_jumlah_retur_lama 	t_jumlah;
-    var_jumlah_retur_baru 	t_jumlah;
-
-	var_harga 				t_harga;
-
-    is_retur				t_bool;
-    is_update_harga_jual	t_bool;
-
-BEGIN		
-	is_retur := FALSE;
-
-    IF TG_OP = 'INSERT' THEN
-    	var_produk_id := NEW.produk_id;
-        var_jumlah_baru = NEW.jumlah;
-        var_harga = NEW.harga_jual;
-
-	ELSIF TG_OP = 'UPDATE' THEN      
-    	var_produk_id := NEW.produk_id;
-        var_jumlah_baru = NEW.jumlah;
-        var_jumlah_lama = OLD.jumlah;
-        var_harga = NEW.harga_jual;
-
-        -- jumlah retur
-        var_jumlah_retur_baru = NEW.jumlah_retur;
-        var_jumlah_retur_lama = OLD.jumlah_retur;
-    ELSE
-    	var_produk_id := OLD.produk_id;
-        var_jumlah_lama = OLD.jumlah;
-        var_harga = OLD.harga_jual;
-    END IF;
-
-    SELECT stok, stok_gudang INTO var_stok_sekarang, var_stok_gudang_sekarang
-    FROM m_produk WHERE produk_id = var_produk_id;
-
-    IF var_stok_sekarang IS NULL THEN -- stok etalase
-        var_stok_sekarang := 0;
-    END IF;
-
-    IF var_stok_gudang_sekarang IS NULL THEN -- stok gudang
-        var_stok_gudang_sekarang := 0;
-    END IF;
-
-    IF TG_OP = 'UPDATE' THEN -- pengecekan retur
-    	IF var_jumlah_retur_lama <> var_jumlah_retur_baru THEN
-        	is_retur := TRUE;
-
-            IF var_jumlah_retur_lama IS NULL THEN
-                var_jumlah_retur_lama := 0;
-            END IF;
-
-            IF var_jumlah_retur_baru IS NULL THEN
-                var_jumlah_retur_baru := 0;
-            END IF;
-
-            var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_retur_lama + var_jumlah_retur_baru;
-			            
-            UPDATE m_produk SET stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
-        END IF;
-    END IF;
-	
-    IF (is_retur = FALSE) THEN -- bukan retur    	    	        
-        IF TG_OP = 'INSERT' THEN
-            var_stok_gudang_sekarang := var_stok_gudang_sekarang - var_jumlah_baru;
-
-            IF (var_stok_gudang_sekarang < 0 AND var_stok_sekarang > 0) THEN -- stok gudang kurang, sisanya ambil dari stok etalase
-            	var_stok_sekarang = var_stok_sekarang - abs(var_stok_gudang_sekarang);
-
-                IF (var_stok_sekarang >= 0) THEN
-                	var_stok_gudang_sekarang := 0; --stok gudang habis
-                ELSE
-                	var_stok_gudang_sekarang := var_stok_sekarang;
-                    var_stok_sekarang := 0;
-                END IF;
-            END IF;
-
-
-        ELSIF TG_OP = 'UPDATE' THEN      
-            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_lama - var_jumlah_baru;
-        ELSE
-            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_lama;
-        END IF;
-
-        IF TG_OP = 'INSERT' THEN   
-            -- baca setting aplikasi
-        	SELECT is_update_harga_jual_master_produk INTO is_update_harga_jual
-            FROM m_setting_aplikasi LIMIT 1;
-
-            IF is_update_harga_jual IS NULL THEN
-				is_update_harga_jual := TRUE;
-            END IF;
-
-        	IF (is_update_harga_jual = TRUE) THEN -- update harga jual di master produk
-            	UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang, harga_jual = var_harga WHERE produk_id = var_produk_id;
-            ELSE          
-	            UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
-			END IF;
-        ELSE        
-            UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
-        END IF;
-    END IF;	
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE 
+
+	var_produk_id 				t_guid;
+
+
+
+	var_stok_sekarang 			t_jumlah; -- stok etalase	
+
+    var_stok_gudang_sekarang 	t_jumlah; -- stok gudang
+
+
+
+    var_jumlah_lama 		t_jumlah;
+
+	var_jumlah_baru 		t_jumlah;
+
+
+
+    var_jumlah_retur_lama 	t_jumlah;
+
+    var_jumlah_retur_baru 	t_jumlah;
+
+
+
+	var_harga 				t_harga;
+
+
+
+    is_retur				t_bool;
+
+    is_update_harga_jual	t_bool;
+
+
+
+BEGIN		
+
+	is_retur := FALSE;
+
+
+
+    IF TG_OP = 'INSERT' THEN
+
+    	var_produk_id := NEW.produk_id;
+
+        var_jumlah_baru = NEW.jumlah;
+
+        var_harga = NEW.harga_jual;
+
+
+
+	ELSIF TG_OP = 'UPDATE' THEN      
+
+    	var_produk_id := NEW.produk_id;
+
+        var_jumlah_baru = NEW.jumlah;
+
+        var_jumlah_lama = OLD.jumlah;
+
+        var_harga = NEW.harga_jual;
+
+
+
+        -- jumlah retur
+
+        var_jumlah_retur_baru = NEW.jumlah_retur;
+
+        var_jumlah_retur_lama = OLD.jumlah_retur;
+
+    ELSE
+
+    	var_produk_id := OLD.produk_id;
+
+        var_jumlah_lama = OLD.jumlah;
+
+        var_harga = OLD.harga_jual;
+
+    END IF;
+
+
+
+    SELECT stok, stok_gudang INTO var_stok_sekarang, var_stok_gudang_sekarang
+
+    FROM m_produk WHERE produk_id = var_produk_id;
+
+
+
+    IF var_stok_sekarang IS NULL THEN -- stok etalase
+
+        var_stok_sekarang := 0;
+
+    END IF;
+
+
+
+    IF var_stok_gudang_sekarang IS NULL THEN -- stok gudang
+
+        var_stok_gudang_sekarang := 0;
+
+    END IF;
+
+
+
+    IF TG_OP = 'UPDATE' THEN -- pengecekan retur
+
+    	IF var_jumlah_retur_lama <> var_jumlah_retur_baru THEN
+
+        	is_retur := TRUE;
+
+
+
+            IF var_jumlah_retur_lama IS NULL THEN
+
+                var_jumlah_retur_lama := 0;
+
+            END IF;
+
+
+
+            IF var_jumlah_retur_baru IS NULL THEN
+
+                var_jumlah_retur_baru := 0;
+
+            END IF;
+
+
+
+            var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_retur_lama + var_jumlah_retur_baru;
+
+			            
+
+            UPDATE m_produk SET stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
+
+        END IF;
+
+    END IF;
+
+	
+
+    IF (is_retur = FALSE) THEN -- bukan retur    	    	        
+
+        IF TG_OP = 'INSERT' THEN
+
+            var_stok_gudang_sekarang := var_stok_gudang_sekarang - var_jumlah_baru;
+
+
+
+            IF (var_stok_gudang_sekarang < 0 AND var_stok_sekarang > 0) THEN -- stok gudang kurang, sisanya ambil dari stok etalase
+
+            	var_stok_sekarang = var_stok_sekarang - abs(var_stok_gudang_sekarang);
+
+
+
+                IF (var_stok_sekarang >= 0) THEN
+
+                	var_stok_gudang_sekarang := 0; --stok gudang habis
+
+                ELSE
+
+                	var_stok_gudang_sekarang := var_stok_sekarang;
+
+                    var_stok_sekarang := 0;
+
+                END IF;
+
+            END IF;
+
+
+
+
+
+        ELSIF TG_OP = 'UPDATE' THEN      
+
+            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_lama - var_jumlah_baru;
+
+        ELSE
+
+            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_lama;
+
+        END IF;
+
+
+
+        IF TG_OP = 'INSERT' THEN   
+
+            -- baca setting aplikasi
+
+        	SELECT is_update_harga_jual_master_produk INTO is_update_harga_jual
+
+            FROM m_setting_aplikasi LIMIT 1;
+
+
+
+            IF is_update_harga_jual IS NULL THEN
+
+				is_update_harga_jual := TRUE;
+
+            END IF;
+
+
+
+        	IF (is_update_harga_jual = TRUE) THEN -- update harga jual di master produk
+
+            	UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang, harga_jual = var_harga WHERE produk_id = var_produk_id;
+
+            ELSE          
+
+	            UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
+
+			END IF;
+
+        ELSE        
+
+            UPDATE m_produk SET stok = var_stok_sekarang, stok_gudang = var_stok_gudang_sekarang WHERE produk_id = var_produk_id;
+
+        END IF;
+
+    END IF;	
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -363,24 +516,98 @@ CREATE FUNCTION f_penyesuaian_stok_aiud() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
-	var_produk_id 						t_guid;    var_stok_etalase					t_jumlah;    var_stok_gudang						t_jumlah;    var_penambahan_stok_etalase			t_jumlah;    var_penambahan_stok_gudang			t_jumlah;    var_pengurangan_stok_etalase		t_jumlah;    var_pengurangan_stok_gudang			t_jumlah;    var_penambahan_stok_etalase_old		t_jumlah;    var_penambahan_stok_gudang_old		t_jumlah;    var_pengurangan_stok_etalase_old	t_jumlah;    var_pengurangan_stok_gudang_old		t_jumlah;BEGIN    
-	IF TG_OP = 'INSERT' THEN    	var_produk_id := NEW.produk_id;        var_penambahan_stok_etalase = NEW.penambahan_stok;		var_penambahan_stok_gudang = NEW.penambahan_stok_gudang;        var_pengurangan_stok_etalase = NEW.pengurangan_stok;		var_pengurangan_stok_gudang = NEW.pengurangan_stok_gudang;	ELSIF TG_OP = 'UPDATE' THEN    	var_produk_id := NEW.produk_id;        var_penambahan_stok_etalase = NEW.penambahan_stok;        var_penambahan_stok_etalase_old = OLD.penambahan_stok;
-				var_penambahan_stok_gudang = NEW.penambahan_stok_gudang;        var_penambahan_stok_gudang_old = OLD.penambahan_stok_gudang;
-		        var_pengurangan_stok_etalase = NEW.pengurangan_stok;        var_pengurangan_stok_etalase_old = OLD.pengurangan_stok;
-		var_pengurangan_stok_gudang = NEW.pengurangan_stok_gudang;        var_pengurangan_stok_gudang_old = OLD.pengurangan_stok_gudang;    ELSE    	var_produk_id := OLD.produk_id;        var_penambahan_stok_etalase_old = OLD.penambahan_stok;        var_penambahan_stok_gudang_old = OLD.penambahan_stok_gudang;        var_pengurangan_stok_etalase_old = OLD.pengurangan_stok;        var_pengurangan_stok_gudang_old = OLD.pengurangan_stok_gudang;    END IF;
+	var_produk_id 						t_guid;
+    var_stok_etalase					t_jumlah;
+    var_stok_gudang						t_jumlah;
+    var_penambahan_stok_etalase			t_jumlah;
+    var_penambahan_stok_gudang			t_jumlah;
+    var_pengurangan_stok_etalase		t_jumlah;
+    var_pengurangan_stok_gudang			t_jumlah;
+    var_penambahan_stok_etalase_old		t_jumlah;
+    var_penambahan_stok_gudang_old		t_jumlah;
+    var_pengurangan_stok_etalase_old	t_jumlah;
+    var_pengurangan_stok_gudang_old		t_jumlah;
+BEGIN    
+
+	IF TG_OP = 'INSERT' THEN
+    	var_produk_id := NEW.produk_id;
+        var_penambahan_stok_etalase = NEW.penambahan_stok;
+		var_penambahan_stok_gudang = NEW.penambahan_stok_gudang;
+        var_pengurangan_stok_etalase = NEW.pengurangan_stok;
+		var_pengurangan_stok_gudang = NEW.pengurangan_stok_gudang;
+	ELSIF TG_OP = 'UPDATE' THEN
+    	var_produk_id := NEW.produk_id;
+        var_penambahan_stok_etalase = NEW.penambahan_stok;
+        var_penambahan_stok_etalase_old = OLD.penambahan_stok;
+		
+		var_penambahan_stok_gudang = NEW.penambahan_stok_gudang;
+        var_penambahan_stok_gudang_old = OLD.penambahan_stok_gudang;
+		
+        var_pengurangan_stok_etalase = NEW.pengurangan_stok;
+        var_pengurangan_stok_etalase_old = OLD.pengurangan_stok;
+
+		var_pengurangan_stok_gudang = NEW.pengurangan_stok_gudang;
+        var_pengurangan_stok_gudang_old = OLD.pengurangan_stok_gudang;
+    ELSE
+    	var_produk_id := OLD.produk_id;
+        var_penambahan_stok_etalase_old = OLD.penambahan_stok;
+        var_penambahan_stok_gudang_old = OLD.penambahan_stok_gudang;
+        var_pengurangan_stok_etalase_old = OLD.pengurangan_stok;
+        var_pengurangan_stok_gudang_old = OLD.pengurangan_stok_gudang;
+    END IF;
+
     SELECT stok, stok_gudang 
-		INTO var_stok_etalase, var_stok_gudang    FROM m_produk 
-	WHERE produk_id = var_produk_id;
-    IF var_stok_etalase IS NULL THEN        var_stok_etalase := 0;    END IF;
-    IF var_stok_gudang IS NULL THEN        var_stok_gudang := 0;    END IF;
-    IF TG_OP = 'INSERT' THEN        IF (var_penambahan_stok_etalase > 0 OR var_penambahan_stok_gudang > 0) THEN        	var_stok_etalase := var_stok_etalase + var_penambahan_stok_etalase;            var_stok_gudang := var_stok_gudang + var_penambahan_stok_gudang;        END IF;
-        IF (var_pengurangan_stok_etalase > 0 OR var_pengurangan_stok_gudang > 0) THEN        	var_stok_etalase := var_stok_etalase - var_pengurangan_stok_etalase;            var_stok_gudang := var_stok_gudang - var_pengurangan_stok_gudang;        END IF;	ELSIF TG_OP = 'UPDATE' THEN        IF (var_penambahan_stok_etalase > 0 OR var_penambahan_stok_etalase_old > 0 OR var_penambahan_stok_gudang > 0 OR var_penambahan_stok_gudang_old > 0) THEN        	var_stok_etalase := var_stok_etalase - var_penambahan_stok_etalase_old + var_penambahan_stok_etalase;            var_stok_gudang := var_stok_gudang - var_penambahan_stok_gudang_old + var_penambahan_stok_gudang;        END IF;
-        IF (var_pengurangan_stok_etalase > 0 OR var_pengurangan_stok_etalase_old > 0 OR var_pengurangan_stok_gudang > 0 OR var_pengurangan_stok_gudang_old > 0) THEN			var_stok_etalase := var_stok_etalase + var_pengurangan_stok_etalase_old - var_pengurangan_stok_etalase;            var_stok_gudang := var_stok_gudang + var_pengurangan_stok_gudang_old - var_pengurangan_stok_gudang;        END IF;    ELSE        IF (var_penambahan_stok_etalase_old > 0 OR var_penambahan_stok_gudang_old > 0) THEN        	var_stok_etalase := var_stok_etalase - var_penambahan_stok_etalase_old;            var_stok_gudang := var_stok_gudang - var_penambahan_stok_gudang_old;        END IF;
-        IF (var_pengurangan_stok_etalase_old > 0 OR var_pengurangan_stok_gudang_old > 0) THEN        	var_stok_etalase := var_stok_etalase + var_pengurangan_stok_etalase_old;            var_stok_gudang := var_stok_gudang + var_pengurangan_stok_gudang_old;        END IF;    END IF;
+		INTO var_stok_etalase, var_stok_gudang
+    FROM m_produk 
+	WHERE produk_id = var_produk_id;
+
+    IF var_stok_etalase IS NULL THEN
+        var_stok_etalase := 0;
+    END IF;
+
+    IF var_stok_gudang IS NULL THEN
+        var_stok_gudang := 0;
+    END IF;
+
+    IF TG_OP = 'INSERT' THEN
+        IF (var_penambahan_stok_etalase > 0 OR var_penambahan_stok_gudang > 0) THEN
+        	var_stok_etalase := var_stok_etalase + var_penambahan_stok_etalase;
+            var_stok_gudang := var_stok_gudang + var_penambahan_stok_gudang;
+        END IF;
+
+        IF (var_pengurangan_stok_etalase > 0 OR var_pengurangan_stok_gudang > 0) THEN
+        	var_stok_etalase := var_stok_etalase - var_pengurangan_stok_etalase;
+            var_stok_gudang := var_stok_gudang - var_pengurangan_stok_gudang;
+        END IF;
+	ELSIF TG_OP = 'UPDATE' THEN
+        IF (var_penambahan_stok_etalase > 0 OR var_penambahan_stok_etalase_old > 0 OR var_penambahan_stok_gudang > 0 OR var_penambahan_stok_gudang_old > 0) THEN
+        	var_stok_etalase := var_stok_etalase - var_penambahan_stok_etalase_old + var_penambahan_stok_etalase;
+            var_stok_gudang := var_stok_gudang - var_penambahan_stok_gudang_old + var_penambahan_stok_gudang;
+        END IF;
+
+        IF (var_pengurangan_stok_etalase > 0 OR var_pengurangan_stok_etalase_old > 0 OR var_pengurangan_stok_gudang > 0 OR var_pengurangan_stok_gudang_old > 0) THEN
+			var_stok_etalase := var_stok_etalase + var_pengurangan_stok_etalase_old - var_pengurangan_stok_etalase;
+            var_stok_gudang := var_stok_gudang + var_pengurangan_stok_gudang_old - var_pengurangan_stok_gudang;
+        END IF;
+    ELSE
+        IF (var_penambahan_stok_etalase_old > 0 OR var_penambahan_stok_gudang_old > 0) THEN
+        	var_stok_etalase := var_stok_etalase - var_penambahan_stok_etalase_old;
+            var_stok_gudang := var_stok_gudang - var_penambahan_stok_gudang_old;
+        END IF;
+
+        IF (var_pengurangan_stok_etalase_old > 0 OR var_pengurangan_stok_gudang_old > 0) THEN
+        	var_stok_etalase := var_stok_etalase + var_pengurangan_stok_etalase_old;
+            var_stok_gudang := var_stok_gudang + var_pengurangan_stok_gudang_old;
+        END IF;
+    END IF;
+
     UPDATE m_produk 
 	SET stok = var_stok_etalase, stok_gudang = var_stok_gudang 
-	WHERE produk_id = var_produk_id;
-    RETURN NULL;END;
+	WHERE produk_id = var_produk_id;
+
+    RETURN NULL;
+END;
+
 $$;
 
 
@@ -394,41 +621,145 @@ CREATE FUNCTION f_tambah_stok_produk() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE 
-	var_produk_id 				t_guid;
-    var_stok_awal				t_jumlah;	var_stok_akhir				t_jumlah;    var_stok_sekarang 			t_jumlah; -- stok etalase	var_stok_gudang_sekarang 	t_jumlah; -- stok gudang    var_jumlah_lama 			t_jumlah;	var_jumlah_baru 			t_jumlah;    var_jumlah_retur_lama 		t_jumlah;    var_jumlah_retur_baru 		t_jumlah;	var_harga 					t_harga; -- harga beli di item beli    var_hpp_awal				t_harga; -- harga beli di master produk    var_hpp_akhir				t_harga;	var_saldo_awal				t_harga; -- (stok etalasi + stok gudang) * harga beli di master produk     var_saldo_pembelian			t_harga;
-    is_retur					t_bool;BEGIN		   	is_retur := FALSE;
-    IF TG_OP = 'INSERT' THEN    	var_produk_id := NEW.produk_id;        var_jumlah_baru = NEW.jumlah;        var_harga = NEW.harga;	ELSIF TG_OP = 'UPDATE' THEN          	var_produk_id := NEW.produk_id;        var_jumlah_baru = NEW.jumlah;        var_jumlah_lama = OLD.jumlah;        var_harga = NEW.harga;
-        -- jumlah retur        var_jumlah_retur_baru = NEW.jumlah_retur;        var_jumlah_retur_lama = OLD.jumlah_retur;    ELSE    	var_produk_id := OLD.produk_id;        var_jumlah_baru = 0;        var_jumlah_lama = OLD.jumlah;        var_harga = OLD.harga;    END IF;
+	var_produk_id 				t_guid;
+
+    var_stok_awal				t_jumlah;
+	var_stok_akhir				t_jumlah;
+    var_stok_sekarang 			t_jumlah; -- stok etalase
+	var_stok_gudang_sekarang 	t_jumlah; -- stok gudang
+    var_jumlah_lama 			t_jumlah;
+	var_jumlah_baru 			t_jumlah;
+    var_jumlah_retur_lama 		t_jumlah;
+    var_jumlah_retur_baru 		t_jumlah;
+	var_harga 					t_harga; -- harga beli di item beli
+    var_hpp_awal				t_harga; -- harga beli di master produk
+    var_hpp_akhir				t_harga;
+	var_saldo_awal				t_harga; -- (stok etalasi + stok gudang) * harga beli di master produk 
+    var_saldo_pembelian			t_harga;
+    is_retur					t_bool;
+BEGIN		   
+	is_retur := FALSE;
+
+    IF TG_OP = 'INSERT' THEN
+    	var_produk_id := NEW.produk_id;
+        var_jumlah_baru = NEW.jumlah;
+        var_harga = NEW.harga;
+	ELSIF TG_OP = 'UPDATE' THEN      
+    	var_produk_id := NEW.produk_id;
+        var_jumlah_baru = NEW.jumlah;
+        var_jumlah_lama = OLD.jumlah;
+        var_harga = NEW.harga;
+
+        -- jumlah retur
+        var_jumlah_retur_baru = NEW.jumlah_retur;
+        var_jumlah_retur_lama = OLD.jumlah_retur;
+    ELSE
+    	var_produk_id := OLD.produk_id;
+        var_jumlah_baru = 0;
+        var_jumlah_lama = OLD.jumlah;
+        var_harga = OLD.harga;
+    END IF;
+
     SELECT stok, stok_gudang, harga_beli 
-		INTO var_stok_sekarang, var_stok_gudang_sekarang, var_hpp_awal    FROM m_produk 
-	WHERE produk_id = var_produk_id;
-    IF var_stok_sekarang IS NULL THEN    	var_stok_sekarang := 0;	END IF;
-    IF var_stok_gudang_sekarang IS NULL THEN    	var_stok_gudang_sekarang := 0;	END IF;
-    IF var_hpp_awal IS NULL THEN    	var_hpp_awal := 0;	END IF;
-    var_stok_akhir := 1;    var_stok_awal := var_stok_sekarang + var_stok_gudang_sekarang;    var_saldo_awal := var_stok_awal * var_hpp_awal;
-    IF TG_OP = 'UPDATE' THEN -- pengecekan retur    	IF var_jumlah_retur_lama <> var_jumlah_retur_baru THEN        	is_retur := TRUE;
-            IF var_jumlah_retur_lama IS NULL THEN                var_jumlah_retur_lama := 0;            END IF;
-            IF var_jumlah_retur_baru IS NULL THEN                var_jumlah_retur_baru := 0;            END IF;
-            var_saldo_pembelian := ABS(var_jumlah_retur_lama - var_jumlah_retur_baru) * var_harga;            var_stok_akhir := (var_stok_awal - ABS(var_jumlah_retur_lama - var_jumlah_retur_baru));
-            IF (var_stok_akhir = 0) THEN            	var_stok_akhir := 1;            END IF;
-            var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_retur_lama - var_jumlah_retur_baru;			            
-            UPDATE m_produk SET stok_gudang = var_stok_gudang_sekarang, harga_beli = ROUND(var_hpp_akhir, 0) WHERE produk_id = var_produk_id;
-        END IF;    END IF;
-    IF (is_retur = FALSE) THEN -- bukan retur    	        	                                          IF TG_OP = 'INSERT' THEN                                  var_saldo_pembelian := var_jumlah_baru * var_harga;          var_stok_akhir := (var_stok_awal + var_jumlah_baru);
-          IF (var_stok_akhir = 0) THEN              var_stok_akhir := 1;          END IF;
-		  var_hpp_akhir := (var_saldo_awal + var_saldo_pembelian) / var_stok_akhir;          var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_baru;      ELSIF TG_OP = 'UPDATE' THEN                       var_saldo_pembelian := ABS(var_jumlah_baru - var_jumlah_lama) * var_harga;          var_hpp_akhir := var_hpp_awal;
-      	  IF (var_jumlah_baru > var_jumlah_lama) THEN                	 var_stok_akhir := (var_stok_awal + var_jumlah_baru - var_jumlah_lama);             IF (var_stok_akhir = 0) THEN             	var_stok_akhir := 1;             END IF;
-          	 var_hpp_akhir := (var_saldo_awal + var_saldo_pembelian) / var_stok_akhir;          ELSEIF (var_jumlah_baru < var_jumlah_lama) THEN          	 
-          	 var_stok_akhir := (var_stok_awal - ABS(var_jumlah_baru - var_jumlah_lama));
-             IF (var_stok_akhir = 0) THEN             	var_stok_akhir := 1;             END IF;
-          	 var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;          END IF;
-          var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_lama + var_jumlah_baru;      ELSE -- DELETE          var_saldo_pembelian := var_jumlah_lama * var_harga;          var_stok_akhir := (var_stok_awal - var_jumlah_lama);
-          IF (var_stok_akhir = 0) THEN             var_stok_akhir := 1;          END IF;
-          var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;          var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_lama;      END IF;
+		INTO var_stok_sekarang, var_stok_gudang_sekarang, var_hpp_awal
+    FROM m_produk 
+	WHERE produk_id = var_produk_id;
+
+    IF var_stok_sekarang IS NULL THEN
+    	var_stok_sekarang := 0;
+	END IF;
+
+    IF var_stok_gudang_sekarang IS NULL THEN
+    	var_stok_gudang_sekarang := 0;
+	END IF;
+
+    IF var_hpp_awal IS NULL THEN
+    	var_hpp_awal := 0;
+	END IF;
+
+    var_stok_akhir := 1;
+    var_stok_awal := var_stok_sekarang + var_stok_gudang_sekarang;
+    var_saldo_awal := var_stok_awal * var_hpp_awal;
+
+    IF TG_OP = 'UPDATE' THEN -- pengecekan retur
+    	IF var_jumlah_retur_lama <> var_jumlah_retur_baru THEN
+        	is_retur := TRUE;
+
+            IF var_jumlah_retur_lama IS NULL THEN
+                var_jumlah_retur_lama := 0;
+            END IF;
+
+            IF var_jumlah_retur_baru IS NULL THEN
+                var_jumlah_retur_baru := 0;
+            END IF;
+
+            var_saldo_pembelian := ABS(var_jumlah_retur_lama - var_jumlah_retur_baru) * var_harga;
+            var_stok_akhir := (var_stok_awal - ABS(var_jumlah_retur_lama - var_jumlah_retur_baru));
+
+            IF (var_stok_akhir = 0) THEN
+            	var_stok_akhir := 1;
+            END IF;
+
+            var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;
+            var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_retur_lama - var_jumlah_retur_baru;			            
+
+            UPDATE m_produk SET stok_gudang = var_stok_gudang_sekarang, harga_beli = ROUND(var_hpp_akhir, 0) WHERE produk_id = var_produk_id;
+
+        END IF;
+    END IF;
+
+    IF (is_retur = FALSE) THEN -- bukan retur    	        	                                    
+      IF TG_OP = 'INSERT' THEN                        
+          var_saldo_pembelian := var_jumlah_baru * var_harga;
+          var_stok_akhir := (var_stok_awal + var_jumlah_baru);
+
+          IF (var_stok_akhir = 0) THEN
+              var_stok_akhir := 1;
+          END IF;
+
+		  var_hpp_akhir := (var_saldo_awal + var_saldo_pembelian) / var_stok_akhir;
+          var_stok_gudang_sekarang = var_stok_gudang_sekarang + var_jumlah_baru;
+      ELSIF TG_OP = 'UPDATE' THEN             
+          var_saldo_pembelian := ABS(var_jumlah_baru - var_jumlah_lama) * var_harga;
+          var_hpp_akhir := var_hpp_awal;
+
+      	  IF (var_jumlah_baru > var_jumlah_lama) THEN      
+          	 var_stok_akhir := (var_stok_awal + var_jumlah_baru - var_jumlah_lama);
+             IF (var_stok_akhir = 0) THEN
+             	var_stok_akhir := 1;
+             END IF;
+
+          	 var_hpp_akhir := (var_saldo_awal + var_saldo_pembelian) / var_stok_akhir;
+          ELSEIF (var_jumlah_baru < var_jumlah_lama) THEN          	 
+          	 var_stok_akhir := (var_stok_awal - ABS(var_jumlah_baru - var_jumlah_lama));
+
+             IF (var_stok_akhir = 0) THEN
+             	var_stok_akhir := 1;
+             END IF;
+
+          	 var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;
+          END IF;
+
+          var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_lama + var_jumlah_baru;
+      ELSE -- DELETE
+          var_saldo_pembelian := var_jumlah_lama * var_harga;
+          var_stok_akhir := (var_stok_awal - var_jumlah_lama);
+
+          IF (var_stok_akhir = 0) THEN
+             var_stok_akhir := 1;
+          END IF;
+
+          var_hpp_akhir := (var_saldo_awal - var_saldo_pembelian) / var_stok_akhir;
+          var_stok_gudang_sekarang = var_stok_gudang_sekarang - var_jumlah_lama;
+      END IF;
+
 	  UPDATE m_produk SET stok_gudang = var_stok_gudang_sekarang, harga_beli = ROUND(var_hpp_akhir, 0) WHERE produk_id = var_produk_id;
-    END IF;    	
-    RETURN NULL;
-END;
+    END IF;    	
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -440,30 +771,54 @@ ALTER FUNCTION public.f_tambah_stok_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_update_jumlah_retur_beli() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	var_item_beli_id 		t_guid;
-    var_jumlah_retur		t_jumlah;
-
-BEGIN	
-
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_item_beli_id := NEW.item_beli_id;
-        var_jumlah_retur := NEW.jumlah_retur;
-    ELSE
-    	var_item_beli_id := OLD.item_beli_id;
-        var_jumlah_retur := 0;
-    END IF;
-
-    IF var_jumlah_retur IS NULL THEN
-        var_jumlah_retur := 0;
-    END IF;
-
-    UPDATE t_item_beli_produk SET jumlah_retur = var_jumlah_retur 
-    WHERE item_beli_produk_id = var_item_beli_id;
-	
-	RETURN NULL;
-END;
+    AS $$
+
+DECLARE
+
+	var_item_beli_id 		t_guid;
+
+    var_jumlah_retur		t_jumlah;
+
+
+
+BEGIN	
+
+
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_item_beli_id := NEW.item_beli_id;
+
+        var_jumlah_retur := NEW.jumlah_retur;
+
+    ELSE
+
+    	var_item_beli_id := OLD.item_beli_id;
+
+        var_jumlah_retur := 0;
+
+    END IF;
+
+
+
+    IF var_jumlah_retur IS NULL THEN
+
+        var_jumlah_retur := 0;
+
+    END IF;
+
+
+
+    UPDATE t_item_beli_produk SET jumlah_retur = var_jumlah_retur 
+
+    WHERE item_beli_produk_id = var_item_beli_id;
+
+	
+
+	RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -475,30 +830,54 @@ ALTER FUNCTION public.f_update_jumlah_retur_beli() OWNER TO postgres;
 
 CREATE FUNCTION f_update_jumlah_retur_jual() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	var_item_jual_id 		t_guid;
-    var_jumlah_retur		t_jumlah;
-
-BEGIN	
-
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_item_jual_id := NEW.item_jual_id;
-        var_jumlah_retur := NEW.jumlah_retur;
-    ELSE
-    	var_item_jual_id := OLD.item_jual_id;
-        var_jumlah_retur := 0;
-    END IF;
-
-    IF var_jumlah_retur IS NULL THEN
-        var_jumlah_retur := 0;
-    END IF;
-
-    UPDATE t_item_jual_produk SET jumlah_retur = var_jumlah_retur 
-    WHERE item_jual_id = var_item_jual_id;
-	
-	RETURN NULL;
-END;
+    AS $$
+
+DECLARE
+
+	var_item_jual_id 		t_guid;
+
+    var_jumlah_retur		t_jumlah;
+
+
+
+BEGIN	
+
+
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_item_jual_id := NEW.item_jual_id;
+
+        var_jumlah_retur := NEW.jumlah_retur;
+
+    ELSE
+
+    	var_item_jual_id := OLD.item_jual_id;
+
+        var_jumlah_retur := 0;
+
+    END IF;
+
+
+
+    IF var_jumlah_retur IS NULL THEN
+
+        var_jumlah_retur := 0;
+
+    END IF;
+
+
+
+    UPDATE t_item_jual_produk SET jumlah_retur = var_jumlah_retur 
+
+    WHERE item_jual_id = var_item_jual_id;
+
+	
+
+	RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -510,29 +889,52 @@ ALTER FUNCTION public.f_update_jumlah_retur_jual() OWNER TO postgres;
 
 CREATE FUNCTION f_update_pelunasan_beli_produk() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE var_beli_produk_id t_guid;
-DECLARE var_pelunasan_nota t_harga;
-
-BEGIN
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_beli_produk_id := NEW.beli_produk_id;
-    ELSE
-    	var_beli_produk_id := OLD.beli_produk_id;
-    END IF;
-	        
-    var_pelunasan_nota := (SELECT SUM(nominal) FROM t_item_pembayaran_hutang_produk 
-    			 	       WHERE beli_produk_id = var_beli_produk_id);
-	
-    IF var_pelunasan_nota IS NULL THEN
-    	var_pelunasan_nota := 0;
-	END IF;
-
-    UPDATE t_beli_produk SET total_pelunasan = var_pelunasan_nota 
-    WHERE beli_produk_id = var_beli_produk_id;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE var_beli_produk_id t_guid;
+
+DECLARE var_pelunasan_nota t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_beli_produk_id := NEW.beli_produk_id;
+
+    ELSE
+
+    	var_beli_produk_id := OLD.beli_produk_id;
+
+    END IF;
+
+	        
+
+    var_pelunasan_nota := (SELECT SUM(nominal) FROM t_item_pembayaran_hutang_produk 
+
+    			 	       WHERE beli_produk_id = var_beli_produk_id);
+
+	
+
+    IF var_pelunasan_nota IS NULL THEN
+
+    	var_pelunasan_nota := 0;
+
+	END IF;
+
+
+
+    UPDATE t_beli_produk SET total_pelunasan = var_pelunasan_nota 
+
+    WHERE beli_produk_id = var_beli_produk_id;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -544,28 +946,50 @@ ALTER FUNCTION public.f_update_pelunasan_beli_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_update_pelunasan_jual_produk() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE var_jual_id t_guid;
-DECLARE var_pelunasan_nota t_harga;
-
-BEGIN
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_jual_id := NEW.jual_id;
-    ELSE
-    	var_jual_id := OLD.jual_id;
-    END IF;
-	        
-    var_pelunasan_nota := (SELECT SUM(nominal) FROM t_item_pembayaran_piutang_produk 
-    			 	       WHERE jual_id = var_jual_id);	
-    IF var_pelunasan_nota IS NULL THEN
-    	var_pelunasan_nota := 0;
-	END IF;
-
-    UPDATE t_jual_produk SET total_pelunasan = var_pelunasan_nota 
-    WHERE jual_id = var_jual_id;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE var_jual_id t_guid;
+
+DECLARE var_pelunasan_nota t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_jual_id := NEW.jual_id;
+
+    ELSE
+
+    	var_jual_id := OLD.jual_id;
+
+    END IF;
+
+	        
+
+    var_pelunasan_nota := (SELECT SUM(nominal) FROM t_item_pembayaran_piutang_produk 
+
+    			 	       WHERE jual_id = var_jual_id);	
+
+    IF var_pelunasan_nota IS NULL THEN
+
+    	var_pelunasan_nota := 0;
+
+	END IF;
+
+
+
+    UPDATE t_jual_produk SET total_pelunasan = var_pelunasan_nota 
+
+    WHERE jual_id = var_jual_id;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -577,49 +1001,92 @@ ALTER FUNCTION public.f_update_pelunasan_jual_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_update_pelunasan_kasbon() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE 
-	var_kasbon_id				t_guid;
-    var_gaji_karyawan_id		t_guid;
-	var_total_pelunasan_kasbon 	t_harga;
-
-BEGIN
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_kasbon_id := NEW.kasbon_id;
-        var_gaji_karyawan_id := NEW.gaji_karyawan_id;
-    ELSE
-    	var_kasbon_id := OLD.kasbon_id;
-        var_gaji_karyawan_id := OLD.gaji_karyawan_id;
-    END IF;
-	        
-    -- pelunasan kasbon
-    var_total_pelunasan_kasbon := (SELECT SUM(nominal) FROM t_pembayaran_kasbon 
-    							   WHERE kasbon_id = var_kasbon_id);	    
-	
-    IF var_total_pelunasan_kasbon IS NULL THEN
-    	var_total_pelunasan_kasbon := 0;
-	END IF;
-
-    -- kasbon
-    UPDATE t_kasbon SET total_pelunasan = var_total_pelunasan_kasbon 
-    WHERE kasbon_id = var_kasbon_id;
-
-    -- hitung total pelunasan yang dibayar pake gaji (potongan gaji untuk kasbon) 
-    IF NOT (var_gaji_karyawan_id IS NULL) THEN
-    	-- pelunasan kasbon
-    	var_total_pelunasan_kasbon := (SELECT SUM(nominal) FROM t_pembayaran_kasbon 
-    							   	   WHERE gaji_karyawan_id = var_gaji_karyawan_id);	    
-	
-	    IF var_total_pelunasan_kasbon IS NULL THEN
-    		var_total_pelunasan_kasbon := 0;
-		END IF;
-    	
-        UPDATE t_gaji_karyawan SET kasbon = var_total_pelunasan_kasbon 
-	    WHERE gaji_karyawan_id = var_gaji_karyawan_id;
-	END IF;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE 
+
+	var_kasbon_id				t_guid;
+
+    var_gaji_karyawan_id		t_guid;
+
+	var_total_pelunasan_kasbon 	t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_kasbon_id := NEW.kasbon_id;
+
+        var_gaji_karyawan_id := NEW.gaji_karyawan_id;
+
+    ELSE
+
+    	var_kasbon_id := OLD.kasbon_id;
+
+        var_gaji_karyawan_id := OLD.gaji_karyawan_id;
+
+    END IF;
+
+	        
+
+    -- pelunasan kasbon
+
+    var_total_pelunasan_kasbon := (SELECT SUM(nominal) FROM t_pembayaran_kasbon 
+
+    							   WHERE kasbon_id = var_kasbon_id);	    
+
+	
+
+    IF var_total_pelunasan_kasbon IS NULL THEN
+
+    	var_total_pelunasan_kasbon := 0;
+
+	END IF;
+
+
+
+    -- kasbon
+
+    UPDATE t_kasbon SET total_pelunasan = var_total_pelunasan_kasbon 
+
+    WHERE kasbon_id = var_kasbon_id;
+
+
+
+    -- hitung total pelunasan yang dibayar pake gaji (potongan gaji untuk kasbon) 
+
+    IF NOT (var_gaji_karyawan_id IS NULL) THEN
+
+    	-- pelunasan kasbon
+
+    	var_total_pelunasan_kasbon := (SELECT SUM(nominal) FROM t_pembayaran_kasbon 
+
+    							   	   WHERE gaji_karyawan_id = var_gaji_karyawan_id);	    
+
+	
+
+	    IF var_total_pelunasan_kasbon IS NULL THEN
+
+    		var_total_pelunasan_kasbon := 0;
+
+		END IF;
+
+    	
+
+        UPDATE t_gaji_karyawan SET kasbon = var_total_pelunasan_kasbon 
+
+	    WHERE gaji_karyawan_id = var_gaji_karyawan_id;
+
+	END IF;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -716,34 +1183,44 @@ CREATE FUNCTION f_update_total_hutang_supplier() RETURNS trigger
 	AS $$
 DECLARE
 	var_supplier_id 				t_guid;
-	var_supplier_id_old				t_guid;	var_total_hutang_produk			t_harga;
-	var_total_pelunasan_produk		t_harga;BEGIN
+	var_supplier_id_old				t_guid;
+	var_total_hutang_produk			t_harga;
+	var_total_pelunasan_produk		t_harga;
+BEGIN
 	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
 		var_supplier_id := NEW.supplier_id;
 	ELSE
 		var_supplier_id := OLD.supplier_id;
 		var_supplier_id_old := OLD.supplier_id;
-	END IF;
-	-- hitung total hutang dan pelunasan pembelian produk
+	END IF;
+
+	-- hitung total hutang dan pelunasan pembelian produk
+
 	SELECT SUM(total_nota - diskon + ppn) AS total_hutang, SUM(total_pelunasan) AS total_pelunasan
 	INTO var_total_hutang_produk, var_total_pelunasan_produk
 	FROM t_beli_produk 
 	WHERE tanggal_tempo IS NOT NULL 
-		AND supplier_id = var_supplier_id;
+		AND supplier_id = var_supplier_id;
+
 	IF var_total_hutang_produk IS NULL THEN
 		var_total_hutang_produk := 0;
-	END IF;
+	END IF;
+
 	IF var_total_pelunasan_produk IS NULL THEN
 		var_total_pelunasan_produk := 0;
-	END IF;
+	END IF;
+
 	UPDATE m_supplier 
 		SET total_hutang = var_total_hutang_produk, 
 			total_pembayaran_hutang = var_total_pelunasan_produk 
-	WHERE supplier_id = var_supplier_id;
+	WHERE supplier_id = var_supplier_id;
+
 	IF TG_OP = 'UPDATE' THEN
-		var_supplier_id_old := OLD.supplier_id;
+		var_supplier_id_old := OLD.supplier_id;
+
 		IF var_supplier_id <> var_supplier_id_old THEN
-			-- hitung total hutang dan pelunasan pembelian produk
+			-- hitung total hutang dan pelunasan pembelian produk
+
 			SELECT SUM(total_nota - diskon + ppn) AS total_hutang, SUM(total_pelunasan) AS total_pelunasan
 			INTO var_total_hutang_produk, var_total_pelunasan_produk
 			FROM t_beli_produk
@@ -752,25 +1229,30 @@ DECLARE
 
 			IF var_total_hutang_produk IS NULL THEN
 				var_total_hutang_produk := 0;
-			END IF;
+			END IF;
+
 			IF var_total_pelunasan_produk IS NULL THEN
 				var_total_pelunasan_produk := 0;
-			END IF;
+			END IF;
+
 			UPDATE m_supplier 
 				SET total_hutang = var_total_hutang_produk, 
 					total_pembayaran_hutang = var_total_pelunasan_produk 
-			WHERE supplier_id = var_supplier_id_old;
+			WHERE supplier_id = var_supplier_id_old;
+
 			UPDATE t_pembayaran_hutang_produk 
 				SET supplier_id = var_supplier_id
 			WHERE pembayaran_hutang_produk_id IN 
 				(SELECT pembayaran_hutang_produk_id 
 				FROM t_item_pembayaran_hutang_produk 
 				WHERE beli_produk_id = NEW.beli_produk_id);
-		END IF;
+		END IF;
+
 	END IF;
 
 	RETURN NULL;
-END;
+END;
+
 $$;
 
 
@@ -870,37 +1352,68 @@ ALTER FUNCTION public.f_update_total_jual_produk() OWNER TO postgres;
 
 CREATE FUNCTION f_update_total_kasbon_karyawan() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE 
-    var_karyawan_id		t_guid;
-
-	var_total_kasbon 	t_harga;
-  	var_total_pelunasan	t_harga;
-
-BEGIN
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_karyawan_id := NEW.karyawan_id;
-    ELSE
-    	var_karyawan_id := OLD.karyawan_id;
-    END IF;	            
-	
-    SELECT SUM(nominal), SUM(total_pelunasan)
-    INTO var_total_kasbon, var_total_pelunasan
-	FROM t_kasbon WHERE karyawan_id = var_karyawan_id;
-
-    IF var_total_kasbon IS NULL THEN
-    	var_total_kasbon := 0;
-	END IF;
-
-    IF var_total_pelunasan IS NULL THEN
-    	var_total_pelunasan := 0;
-	END IF;
-
-    UPDATE m_karyawan SET total_kasbon = var_total_kasbon, total_pembayaran_kasbon = var_total_pelunasan 
-    WHERE karyawan_id = var_karyawan_id;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE 
+
+    var_karyawan_id		t_guid;
+
+
+
+	var_total_kasbon 	t_harga;
+
+  	var_total_pelunasan	t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_karyawan_id := NEW.karyawan_id;
+
+    ELSE
+
+    	var_karyawan_id := OLD.karyawan_id;
+
+    END IF;	            
+
+	
+
+    SELECT SUM(nominal), SUM(total_pelunasan)
+
+    INTO var_total_kasbon, var_total_pelunasan
+
+	FROM t_kasbon WHERE karyawan_id = var_karyawan_id;
+
+
+
+    IF var_total_kasbon IS NULL THEN
+
+    	var_total_kasbon := 0;
+
+	END IF;
+
+
+
+    IF var_total_pelunasan IS NULL THEN
+
+    	var_total_pelunasan := 0;
+
+	END IF;
+
+
+
+    UPDATE m_karyawan SET total_kasbon = var_total_kasbon, total_pembayaran_kasbon = var_total_pelunasan 
+
+    WHERE karyawan_id = var_karyawan_id;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -912,27 +1425,48 @@ ALTER FUNCTION public.f_update_total_kasbon_karyawan() OWNER TO postgres;
 
 CREATE FUNCTION f_update_total_pengeluaran() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE v_pengeluaran_id t_guid;
-DECLARE v_total t_harga;
-
-BEGIN
-	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	v_pengeluaran_id := NEW.pengeluaran_id;
-    ELSE
-    	v_pengeluaran_id := OLD.pengeluaran_id;
-    END IF;
-
-    v_total := (SELECT SUM(jumlah * harga) FROM t_item_pengeluaran_biaya
-			    WHERE pengeluaran_id = v_pengeluaran_id);
-	
-    IF v_total IS NULL THEN
-    	v_total := 0;
-	END IF;
-
-    UPDATE t_pengeluaran_biaya SET total = v_total WHERE pengeluaran_id = v_pengeluaran_id;
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE v_pengeluaran_id t_guid;
+
+DECLARE v_total t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	v_pengeluaran_id := NEW.pengeluaran_id;
+
+    ELSE
+
+    	v_pengeluaran_id := OLD.pengeluaran_id;
+
+    END IF;
+
+
+
+    v_total := (SELECT SUM(jumlah * harga) FROM t_item_pengeluaran_biaya
+
+			    WHERE pengeluaran_id = v_pengeluaran_id);
+
+	
+
+    IF v_total IS NULL THEN
+
+    	v_total := 0;
+
+	END IF;
+
+
+
+    UPDATE t_pengeluaran_biaya SET total = v_total WHERE pengeluaran_id = v_pengeluaran_id;
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -1013,31 +1547,56 @@ ALTER FUNCTION public.f_update_total_piutang_customer() OWNER TO postgres;
 
 CREATE FUNCTION f_update_total_retur_beli_aiud() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	var_retur_beli_produk_id	t_guid;
-	var_total_nota 		t_harga;
-
-BEGIN    
-    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_retur_beli_produk_id := NEW.retur_beli_produk_id;
-    ELSE
-    	var_retur_beli_produk_id := OLD.retur_beli_produk_id;
-    END IF;
-
-    var_total_nota := (SELECT SUM(jumlah_retur * harga) 
-    				   FROM t_item_retur_beli_produk
-					   WHERE retur_beli_produk_id = var_retur_beli_produk_id);
-
-    IF var_total_nota IS NULL THEN
-    	var_total_nota := 0;
-	END IF;
-
-    UPDATE t_retur_beli_produk SET total_nota = var_total_nota 
-    WHERE retur_beli_produk_id = var_retur_beli_produk_id;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE
+
+	var_retur_beli_produk_id	t_guid;
+
+	var_total_nota 		t_harga;
+
+
+
+BEGIN    
+
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_retur_beli_produk_id := NEW.retur_beli_produk_id;
+
+    ELSE
+
+    	var_retur_beli_produk_id := OLD.retur_beli_produk_id;
+
+    END IF;
+
+
+
+    var_total_nota := (SELECT SUM(jumlah_retur * harga) 
+
+    				   FROM t_item_retur_beli_produk
+
+					   WHERE retur_beli_produk_id = var_retur_beli_produk_id);
+
+
+
+    IF var_total_nota IS NULL THEN
+
+    	var_total_nota := 0;
+
+	END IF;
+
+
+
+    UPDATE t_retur_beli_produk SET total_nota = var_total_nota 
+
+    WHERE retur_beli_produk_id = var_retur_beli_produk_id;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -1049,31 +1608,56 @@ ALTER FUNCTION public.f_update_total_retur_beli_aiud() OWNER TO postgres;
 
 CREATE FUNCTION f_update_total_retur_produk_aiud() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE
-	var_retur_jual_id	t_guid;
-	var_total_nota 		t_harga;
-
-BEGIN    
-    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    	var_retur_jual_id := NEW.retur_jual_id;
-    ELSE
-    	var_retur_jual_id := OLD.retur_jual_id;
-    END IF;
-
-    var_total_nota := (SELECT SUM(jumlah_retur * harga_jual) 
-    				   FROM t_item_retur_jual_produk
-					   WHERE retur_jual_id = var_retur_jual_id);
-
-    IF var_total_nota IS NULL THEN
-    	var_total_nota := 0;
-	END IF;
-
-    UPDATE t_retur_jual_produk SET total_nota = var_total_nota 
-    WHERE retur_jual_id = var_retur_jual_id;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE
+
+	var_retur_jual_id	t_guid;
+
+	var_total_nota 		t_harga;
+
+
+
+BEGIN    
+
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+
+    	var_retur_jual_id := NEW.retur_jual_id;
+
+    ELSE
+
+    	var_retur_jual_id := OLD.retur_jual_id;
+
+    END IF;
+
+
+
+    var_total_nota := (SELECT SUM(jumlah_retur * harga_jual) 
+
+    				   FROM t_item_retur_jual_produk
+
+					   WHERE retur_jual_id = var_retur_jual_id);
+
+
+
+    IF var_total_nota IS NULL THEN
+
+    	var_total_nota := 0;
+
+	END IF;
+
+
+
+    UPDATE t_retur_jual_produk SET total_nota = var_total_nota 
+
+    WHERE retur_jual_id = var_retur_jual_id;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -1085,33 +1669,60 @@ ALTER FUNCTION public.f_update_total_retur_produk_aiud() OWNER TO postgres;
 
 CREATE FUNCTION fn_log_last_update() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$
-DECLARE 	
-    var_produk_id		t_guid;
-    var_harga_jual		t_harga;
-    var_harga_jual_old	t_harga;
-
-BEGIN
-	IF TG_OP = 'UPDATE' THEN
-    	var_produk_id := NEW.produk_id;
-        var_harga_jual := NEW.harga_jual;
-        var_harga_jual_old := OLD.harga_jual;    	
-    END IF;
-
-    IF var_harga_jual IS NULL THEN
-    	var_harga_jual := 0;
-    END IF;
-    	   
-    IF var_harga_jual_old IS NULL THEN
-    	var_harga_jual_old := 0;
-    END IF;
-
-    IF var_harga_jual_old <> var_harga_jual THEN
-    	UPDATE m_produk SET last_update = now() WHERE produk_id = var_produk_id;
-    END IF;
-
-    RETURN NULL;
-END;
+    AS $$
+
+DECLARE 	
+
+    var_produk_id		t_guid;
+
+    var_harga_jual		t_harga;
+
+    var_harga_jual_old	t_harga;
+
+
+
+BEGIN
+
+	IF TG_OP = 'UPDATE' THEN
+
+    	var_produk_id := NEW.produk_id;
+
+        var_harga_jual := NEW.harga_jual;
+
+        var_harga_jual_old := OLD.harga_jual;    	
+
+    END IF;
+
+
+
+    IF var_harga_jual IS NULL THEN
+
+    	var_harga_jual := 0;
+
+    END IF;
+
+    	   
+
+    IF var_harga_jual_old IS NULL THEN
+
+    	var_harga_jual_old := 0;
+
+    END IF;
+
+
+
+    IF var_harga_jual_old <> var_harga_jual THEN
+
+    	UPDATE m_produk SET last_update = now() WHERE produk_id = var_produk_id;
+
+    END IF;
+
+
+
+    RETURN NULL;
+
+END;
+
 $$;
 
 
@@ -1442,8 +2053,10 @@ ALTER TABLE m_pengguna OWNER TO postgres;
 -- Name: COLUMN m_pengguna.status_user; Type: COMMENT; Schema: public; Owner: postgres
 --
 
-COMMENT ON COLUMN m_pengguna.status_user IS '1 = Kasir
-2 = Server
+COMMENT ON COLUMN m_pengguna.status_user IS '1 = Kasir
+
+2 = Server
+
 3 = Kasir dan Server';
 
 
@@ -3540,10 +4153,44 @@ ALTER TABLE ONLY t_retur_jual_produk
 ALTER TABLE ONLY t_retur_jual_produk
     ADD CONSTRAINT t_retur_jual_fk2 FOREIGN KEY (customer_id) REFERENCES m_customer(customer_id) ON UPDATE CASCADE;
 
+-- ----------------------------------------------------------------------------
+-- GRUP CUSTOMER
+-- ----------------------------------------------------------------------------
+CREATE TABLE public.c_grup_customer (
+	grup_customer_id int4 NOT NULL GENERATED BY DEFAULT AS IDENTITY,
+	nama_grup varchar(30) NOT NULL,
+	deskripsi varchar(80) NULL,
+	CONSTRAINT c_grup_customer_pk PRIMARY KEY (grup_customer_id)
+);
 
---
+CREATE SEQUENCE public.c_grup_customer_grup_customer_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- ----------------------------------------------------------------------------
+-- PRODUK PAKETAN
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.m_produk_paketan (
+	produk_paketan_id t_guid NOT NULL,
+	produk_id t_guid NOT NULL,
+	qty int4 NOT NULL DEFAULT 1,
+	subproduk_id t_guid NOT NULL,
+	CONSTRAINT m_produk_paketan_pk PRIMARY KEY (produk_paketan_id, produk_id)
+);
+
+
+-- public.m_produk_paketan foreign keys
+
+ALTER TABLE public.m_produk_paketan ADD CONSTRAINT m_produk_paketan_fk FOREIGN KEY (subproduk_id) REFERENCES m_produk(produk_id);
+
+-- ----------------------------------------------------------------------------
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
---
+--  ----------------------------------------------------------------------------
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
