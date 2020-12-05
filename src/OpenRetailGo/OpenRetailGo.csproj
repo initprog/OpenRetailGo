@@ -507,6 +507,12 @@
     <Compile Include="Referensi\FrmCetakLabelHargaProduk.Designer.cs">
       <DependentUpon>FrmCetakLabelHargaProduk.cs</DependentUpon>
     </Compile>
+    <Compile Include="Referensi\FrmEntryGrupCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Referensi\FrmEntryGrupCustomer.Designer.cs">
+      <DependentUpon>FrmEntryGrupCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Referensi\FrmEntryKartu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -596,6 +602,12 @@
     </Compile>
     <Compile Include="Referensi\FrmImportDataGolongan.Designer.cs">
       <DependentUpon>FrmImportDataGolongan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Referensi\FrmListGrupCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Referensi\FrmListGrupCustomer.Designer.cs">
+      <DependentUpon>FrmListGrupCustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="Referensi\FrmListKartu.cs">
       <SubType>Form</SubType>
@@ -858,6 +870,9 @@
     <EmbeddedResource Include="Referensi\FrmCetakLabelHargaProduk.resx">
       <DependentUpon>FrmCetakLabelHargaProduk.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Referensi\FrmEntryGrupCustomer.resx">
+      <DependentUpon>FrmEntryGrupCustomer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Referensi\FrmEntryKartu.resx">
       <DependentUpon>FrmEntryKartu.cs</DependentUpon>
     </EmbeddedResource>
@@ -887,6 +902,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Referensi\FrmEntryGolongan.resx">
       <DependentUpon>FrmEntryGolongan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Referensi\FrmListGrupCustomer.resx">
+      <DependentUpon>FrmListGrupCustomer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Referensi\FrmListKartu.resx">
       <DependentUpon>FrmListKartu.cs</DependentUpon>

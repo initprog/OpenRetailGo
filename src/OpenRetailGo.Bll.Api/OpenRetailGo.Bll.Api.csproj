@@ -45,6 +45,7 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Referensi\IGrupCustomerBll.cs" />
     <Compile Include="Referensi\IHargaGrosirBll.cs" />
     <Compile Include="Report\IReportRugiLabaBll.cs" />
     <Compile Include="Transaksi\IAlamatKirimBll.cs" />

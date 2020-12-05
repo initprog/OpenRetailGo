@@ -4163,14 +4163,6 @@ CREATE TABLE public.c_grup_customer (
 	CONSTRAINT c_grup_customer_pk PRIMARY KEY (grup_customer_id)
 );
 
-CREATE SEQUENCE public.c_grup_customer_grup_customer_id_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START 1
-	CACHE 1
-	NO CYCLE;
-
 -- ----------------------------------------------------------------------------
 -- PRODUK PAKETAN
 -- ----------------------------------------------------------------------------
@@ -4178,8 +4170,8 @@ CREATE SEQUENCE public.c_grup_customer_grup_customer_id_seq
 CREATE TABLE public.m_produk_paketan (
 	produk_paketan_id t_guid NOT NULL,
 	produk_id t_guid NOT NULL,
+    subproduk_id t_guid NOT NULL,
 	qty int4 NOT NULL DEFAULT 1,
-	subproduk_id t_guid NOT NULL,
 	CONSTRAINT m_produk_paketan_pk PRIMARY KEY (produk_paketan_id, produk_id)
 );
 
