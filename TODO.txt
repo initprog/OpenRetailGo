@@ -44,3 +44,9 @@ VALUES('b7ade8cc-22aa-43c8-be9c-af6cb71d11a6', 'mnuKaryawan', 'Karyawan', '07b24
 INSERT INTO public.m_menu
 (menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
 VALUES('b52e8eac-3bf6-4ebf-95a0-46ab9e7b0888', 'mnuJenisPengeluaran', 'Jenis Pengeluaran', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 130, true, 'FrmListJenisPengeluaran', true);
+
+-- tambah privilege untuk admin
+insert into m_role_privilege values ('11dc1faf-2c66-4525-932d-a90e24da8987','b06407d2-e71e-4231-8aed-0f4dc70031e9',0,true);
+insert into m_role_privilege values ('11dc1faf-2c66-4525-932d-a90e24da8987','b06407d2-e71e-4231-8aed-0f4dc70031e9',1,true);
+insert into m_role_privilege values ('11dc1faf-2c66-4525-932d-a90e24da8987','b06407d2-e71e-4231-8aed-0f4dc70031e9',2,true);
+insert into m_role_privilege values ('11dc1faf-2c66-4525-932d-a90e24da8987','b06407d2-e71e-4231-8aed-0f4dc70031e9',3,true);
