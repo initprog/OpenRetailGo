@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to OpenRetailGo
 
 You can use the [editor on GitHub](https://github.com/initprog/OpenRetailGo/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
