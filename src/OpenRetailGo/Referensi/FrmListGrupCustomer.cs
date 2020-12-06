@@ -98,7 +98,6 @@ namespace OpenRetailGo.Referensi
                                     break;
 
                                 case 3:
-                                    e.Style.HorizontalAlignment = GridHorizontalAlignment.Center;
                                     e.Style.CellValue = grupCustomer.deskripsi;
                                     break;
 

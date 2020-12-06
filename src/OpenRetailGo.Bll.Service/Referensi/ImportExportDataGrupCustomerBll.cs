@@ -1,6 +1,5 @@
 ﻿/**
- * Original work Copyright (C) 2017 Kamarudin (http://coding4ever.net/)
- * Modified work copyright 2020 OpenRetailGo
+ * Copyright (C) 2020 OpenRetailGo
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,7 +70,7 @@ namespace OpenRetailGo.Bll.Service
                 // Look for the first row used
                 var firstRowUsed = ws.FirstRowUsed();
 
-                var colums = new string[] { "GOLONGAN", "KEUNTUNGAN (%)", "DISKON" };
+                var colums = new string[] { "NAMA GRUP", "DESKRIPSI" };
 
                 for (int i = 0; i < colums.Length; i++)
                 {
@@ -114,41 +113,42 @@ namespace OpenRetailGo.Bll.Service
                 var golonganRange = ws.Range(firstPossibleAddress, lastPossibleAddress).RangeUsed();
 
                 // Treat the range as a table (to be able to use the column names)
-                var golonganTable = golonganRange.AsTable();
+                var grupCustomerTable = golonganRange.AsTable();
 
-                var listOfGolongan = new List<Golongan>();
+                var listOfGrupCustomer = new List<GrupCustomer>();
 
-                listOfGolongan = golonganTable.DataRange.Rows().Select(row => new Golongan
+                listOfGrupCustomer = grupCustomerTable.DataRange.Rows().Select(row => new GrupCustomer
                 {
-                    nama_golongan = row.Field("GOLONGAN").GetString(),
-                    persentase_keuntungan = row.Field("KEUNTUNGAN (%)").GetString().Length == 0 ? 0 : Convert.ToDouble(row.Field("KEUNTUNGAN (%)").GetString()),
-                    diskon = row.Field("DISKON").GetString().Length == 0 ? 0 : Convert.ToDouble(row.Field("DISKON").GetString())
+                    nama_grup = row.Field("NAMA GRUP").GetString(),
+                    deskripsi = row.Field("DESKRIPSI").GetString()
                 }).ToList();
 
-                if (listOfGolongan.Count == 1 && listOfGolongan[0].nama_golongan.Length == 0)
+                if (listOfGrupCustomer.Count == 1 && listOfGrupCustomer[0].nama_grup.Length == 0)
                 {
                     rowCount = 0;
                     return false;
                 }
 
-                rowCount = listOfGolongan.Count;
+                rowCount = listOfGrupCustomer.Count;
 
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
 
-                    foreach (var golongan in listOfGolongan)
+                    foreach (var grupCustomer in listOfGrupCustomer)
                     {
-                        if (golongan.nama_golongan.Length > 0)
+                        if (grupCustomer.nama_grup.Length > 0)
                         {
-                            if (golongan.nama_golongan.Length > 50)
-                                golongan.nama_golongan = golongan.nama_golongan.Substring(0, 50);
+                            // cek duplikasi data berdasarkan nama grup
+                            if (grupCustomer.nama_grup.Length > 30)
+                                grupCustomer.nama_grup = grupCustomer.nama_grup.Substring(0, 50);
 
-                            var oldGolongan = _unitOfWork.GolonganRepository.GetByName(golongan.nama_golongan, false)
+                            var oldGrupCustomer = repo.GetByName(grupCustomer.nama_grup, false)
                                                                     .FirstOrDefault();
 
-                            if (oldGolongan == null) // data golongan belum ada
-                                result = Convert.ToBoolean(_unitOfWork.GolonganRepository.Save(golongan));
+                            // hanya data yg belum ada akan di import
+                            if (oldGrupCustomer == null) 
+                                result = Convert.ToBoolean(repo.Save(grupCustomer));
                         }                        
                     }                    
                 }
@@ -172,17 +172,15 @@ namespace OpenRetailGo.Bll.Service
             try
             {
                 // Creating a new workbook
-
                 using (var wb = new XLWorkbook())
                 {
                     // Adding a worksheet
-                    var ws = wb.Worksheets.Add("golongan");
+                    var ws = wb.Worksheets.Add("grup customer");
 
                     // Set header table
                     ws.Cell(1, 1).Value = "NO";
-                    ws.Cell(1, 2).Value = "GOLONGAN";
-                    ws.Cell(1, 3).Value = "KEUNTUNGAN (%)";
-                    ws.Cell(1, 4).Value = "DISKON";
+                    ws.Cell(1, 2).Value = "NAMA GRUP";
+                    ws.Cell(1, 3).Value = "DESKRIPSI";
 
                     var noUrut = 1;
                     foreach (var golongan in listOfObject)
@@ -198,6 +196,8 @@ namespace OpenRetailGo.Bll.Service
                     wb.SaveAs(_fileName);
 
                     var fi = new FileInfo(_fileName);
+
+                    // Open the spreadsheet
                     if (fi.Exists)
                         Process.Start(_fileName);
                 }                               

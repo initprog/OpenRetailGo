@@ -1,6 +1,5 @@
 ﻿/**
- * Original work Copyright (C) 2017 Kamarudin (http://coding4ever.net/)
- * Modified work copyright 2020 OpenRetailGo
+ * Copyright (C) 2020 OpenRetailGo
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +31,7 @@ namespace OpenRetailGo.Referensi
 {
     public partial class FrmImportDataGrupCustomer : FrmDialogImport
     {
-        private const string ImportTitle = "Golongan";
+        private const string ImportTitle = "Grup Customer";
         private ILog _log;
 
         public IListener Listener { private get; set; }
@@ -53,7 +52,7 @@ namespace OpenRetailGo.Referensi
 
             if (MsgHelper.MsgKonfirmasi(string.Format(msg, ImportTitle)))
             {
-                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_golongan.xlsx";
+                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_grup_customer.xlsx";
 
                 if (!File.Exists(fileMaster))
                 {
@@ -94,7 +93,7 @@ namespace OpenRetailGo.Referensi
                 {
                     txtPath.Text = dlgOpen.FileName;
 
-                    IImportExportDataBll<Golongan> importDataBll = new ImportExportDataGolonganBll(txtPath.Text, _log);
+                    IImportExportDataBll<GrupCustomer> importDataBll = new ImportExportDataGrupCustomerBll(txtPath.Text, _log);
 
                     if (importDataBll.IsOpened())
                     {
@@ -130,7 +129,7 @@ namespace OpenRetailGo.Referensi
                 return;
             }
 
-            IImportExportDataBll<Golongan> importDataBll = new ImportExportDataGolonganBll(txtPath.Text, _log);
+            IImportExportDataBll<GrupCustomer> importDataBll = new ImportExportDataGrupCustomerBll(txtPath.Text, _log);
 
             if (importDataBll.IsOpened())
             {

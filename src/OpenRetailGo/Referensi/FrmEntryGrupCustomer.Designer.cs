@@ -41,13 +41,13 @@
             this.btnSelesai.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnSelesai.Location = new System.Drawing.Point(228, 137);
             this.btnSelesai.Size = new System.Drawing.Size(88, 38);
-            this.btnSelesai.TabIndex = 4;
+            this.btnSelesai.TabIndex = 3;
             // 
             // btnSimpan
             // 
             this.btnSimpan.Location = new System.Drawing.Point(109, 137);
             this.btnSimpan.Size = new System.Drawing.Size(88, 38);
-            this.btnSimpan.TabIndex = 3;
+            this.btnSimpan.TabIndex = 2;
             // 
             // lblNamaGrup
             // 
@@ -68,9 +68,9 @@
             this.txtDeskripsi.LeaveFocusColor = System.Drawing.Color.White;
             this.txtDeskripsi.LetterOnly = false;
             this.txtDeskripsi.Location = new System.Drawing.Point(36, 83);
-            this.txtDeskripsi.MaxLength = 5;
+            this.txtDeskripsi.MaxLength = 80;
             this.txtDeskripsi.Name = "txtDeskripsi";
-            this.txtDeskripsi.NumericOnly = true;
+            this.txtDeskripsi.NumericOnly = false;
             this.txtDeskripsi.SelectionText = false;
             this.txtDeskripsi.Size = new System.Drawing.Size(280, 23);
             this.txtDeskripsi.TabIndex = 1;
@@ -95,6 +95,7 @@
             this.txtNamaGrup.LeaveFocusColor = System.Drawing.Color.White;
             this.txtNamaGrup.LetterOnly = false;
             this.txtNamaGrup.Location = new System.Drawing.Point(36, 33);
+            this.txtNamaGrup.MaxLength = 30;
             this.txtNamaGrup.Name = "txtNamaGrup";
             this.txtNamaGrup.NumericOnly = false;
             this.txtNamaGrup.SelectionText = false;
