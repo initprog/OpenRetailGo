@@ -1,6 +1,6 @@
 ﻿namespace OpenRetailGo.Referensi
 {
-    partial class FrmListGrupCustomer
+    partial class FrmImportDataGrupCustomer
     {
         /// <summary>
         /// Required designer variable.
@@ -28,18 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // FrmListGolongan
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 441);
-            this.Location = new System.Drawing.Point(0, 0);
-            this.Name = "FrmListGrupCustomer";
-            this.Text = "FrmListGrupCustomer";
-            this.ResumeLayout(false);
-
+            this.Text = "FrmImportDataGolongan";
         }
 
         #endregion

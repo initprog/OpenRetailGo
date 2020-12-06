@@ -61,8 +61,8 @@ namespace OpenRetailGo.Bll.Service
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    obj = _unitOfWork.GrupCustomerRepository.GetByID(id);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    obj = repo.GetByID(id);
                 }
             }            
 
@@ -75,15 +75,15 @@ namespace OpenRetailGo.Bll.Service
 
             if (_isUseWebAPI)
             {
-                _unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
-                oList = _unitOfWork.GrupCustomerRepository.GetByName(name);
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
+                //oList = _unitOfWork.GrupCustomerRepository.GetByName(name);
             }
             else
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    oList = _unitOfWork.GrupCustomerRepository.GetByName(name);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    oList = repo.GetByName(name);
                 }
             }            
 
@@ -96,15 +96,15 @@ namespace OpenRetailGo.Bll.Service
 
             if (_isUseWebAPI)
             {
-                _unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
-                oList = _unitOfWork.GrupCustomerRepository.GetAll();
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
+                //oList = _unitOfWork.GrupCustomerRepository.GetAll();
             }
             else
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    oList = _unitOfWork.GrupCustomerRepository.GetAll();
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    oList = repo.GetAll();
                 }
             }            
 
@@ -117,17 +117,17 @@ namespace OpenRetailGo.Bll.Service
 
             if (_isUseWebAPI)
             {
-                obj.GrupCustomer_id = Guid.NewGuid().ToString();
+                //obj.GrupCustomer_id = Guid.NewGuid().ToString();
 
-                _unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);                
-                result = _unitOfWork.GrupCustomerRepository.Save(obj);
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);                
+                //result = _unitOfWork.GrupCustomerRepository.Save(obj);
             }
             else
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    result = _unitOfWork.GrupCustomerRepository.Save(obj);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    result = repo.Save(obj);
                 }
             }            
 
@@ -157,15 +157,15 @@ namespace OpenRetailGo.Bll.Service
 
             if (_isUseWebAPI)
             {
-                _unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
-                result = _unitOfWork.GrupCustomerRepository.Update(obj);
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
+                //result = _unitOfWork.GrupCustomerRepository.Update(obj);
             }
             else
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    result = _unitOfWork.GrupCustomerRepository.Update(obj);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    result = repo.Update(obj);
                 }
             }            
 
@@ -195,15 +195,15 @@ namespace OpenRetailGo.Bll.Service
 
             if (_isUseWebAPI)
             {
-                _unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
-                result = _unitOfWork.GrupCustomerRepository.Delete(obj);
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
+                //result = _unitOfWork.GrupCustomerRepository.Delete(obj);
             }
             else
             {
                 using (IDapperContext context = new DapperContext())
                 {
-                    _unitOfWork = new UnitOfWork(context, _log);
-                    result = _unitOfWork.GrupCustomerRepository.Delete(obj);
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    result = repo.Delete(obj);
                 }
             }            
 

@@ -585,6 +585,12 @@
     <Compile Include="Referensi\FrmImportDataDropshipper.Designer.cs">
       <DependentUpon>FrmImportDataDropshipper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Referensi\FrmImportDataGrupCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Referensi\FrmImportDataGrupCustomer.Designer.cs">
+      <DependentUpon>FrmImportDataGrupCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Referensi\FrmImportDataSupplier.cs">
       <SubType>Form</SubType>
     </Compile>

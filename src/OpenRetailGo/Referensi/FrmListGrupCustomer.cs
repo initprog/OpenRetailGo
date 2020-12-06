@@ -31,24 +31,24 @@ using System.Diagnostics;
 
 namespace OpenRetailGo.Referensi
 {
-    public partial class FrmListGolongan : FrmListStandard, IListener
+    public partial class FrmListGrupCustomer : FrmListStandard, IListener
     {
-        private IGolonganBll _bll; // deklarasi objek business logic layer 
-        private IList<Golongan> _listOfGolongan = new List<Golongan>();
+        private IGrupCustomerBll _bll; // deklarasi objek business logic layer 
+        private IList<GrupCustomer> _listOfCrupCustomer = new List<GrupCustomer>();
         private ILog _log;
 
-        public FrmListGolongan(string header, Pengguna pengguna, string menuId)
+        public FrmListGrupCustomer(string header, Pengguna pengguna, string menuId)
             : base(header)
         {
             InitializeComponent();
             this.btnImport.Visible = true;
-            this.toolTip1.SetToolTip(this.btnImport, "Import/Export Data Golongan");
-            this.mnuBukaFileMaster.Text = "Buka File Master Golongan";
-            this.mnuImportFileMaster.Text = "Import File Master Golongan";
-            this.mnuExportData.Text = "Export Data Golongan";
+            this.toolTip1.SetToolTip(this.btnImport, "Import/Export Data GrupCustomer");
+            this.mnuBukaFileMaster.Text = "Buka File Master GrupCustomer";
+            this.mnuImportFileMaster.Text = "Import File Master GrupCustomer";
+            this.mnuExportData.Text = "Export Data GrupCustomer";
 
             _log = MainProgram.log;
-            _bll = new GolonganBll(MainProgram.isUseWebAPI, MainProgram.baseUrl, _log);
+            _bll = new GrupCustomerBll(MainProgram.isUseWebAPI, MainProgram.baseUrl, _log);
 
             // set hak akses untuk SELECT
             var role = pengguna.GetRoleByMenuAndGrant(menuId, GrantState.SELECT);
@@ -63,7 +63,7 @@ namespace OpenRetailGo.Referensi
             InitGridList();
 
             // set hak akses selain SELECT (TAMBAH, PERBAIKI dan HAPUS)
-            RolePrivilegeHelper.SetHakAkses(this, pengguna, menuId, _listOfGolongan.Count);
+            RolePrivilegeHelper.SetHakAkses(this, pengguna, menuId, _listOfCrupCustomer.Count);
         }
 
         private void InitGridList()
@@ -71,41 +71,35 @@ namespace OpenRetailGo.Referensi
             var gridListProperties = new List<GridListControlProperties>();
 
             gridListProperties.Add(new GridListControlProperties { Header = "No", Width = 30 });
-            gridListProperties.Add(new GridListControlProperties { Header = "Golongan", Width = 700 });
-            gridListProperties.Add(new GridListControlProperties { Header = "Keuntungan (%)", Width = 400 });
-            gridListProperties.Add(new GridListControlProperties { Header = "Diskon" });
+            gridListProperties.Add(new GridListControlProperties { Header = "Nama Grup Customer", Width = 400 });
+            gridListProperties.Add(new GridListControlProperties { Header = "Deskripsi", Width = 700 });
 
-            GridListControlHelper.InitializeGridListControl<Golongan>(this.gridList, _listOfGolongan, gridListProperties);
+            GridListControlHelper.InitializeGridListControl<GrupCustomer>(this.gridList, _listOfCrupCustomer, gridListProperties);
 
-            if (_listOfGolongan.Count > 0)
+            if (_listOfCrupCustomer.Count > 0)
                 this.gridList.SetSelected(0, true);
 
             this.gridList.Grid.QueryCellInfo += delegate(object sender, GridQueryCellInfoEventArgs e)
             {
-                if (_listOfGolongan.Count > 0)
+                if (_listOfCrupCustomer.Count > 0)
                 {
                     if (e.RowIndex > 0)
                     {
                         var rowIndex = e.RowIndex - 1;
 
-                        if (rowIndex < _listOfGolongan.Count)
+                        if (rowIndex < _listOfCrupCustomer.Count)
                         {
-                            var golongan = _listOfGolongan[rowIndex];
+                            var grupCustomer = _listOfCrupCustomer[rowIndex];
 
                             switch (e.ColIndex)
                             {
                                 case 2:
-                                    e.Style.CellValue = golongan.nama_golongan;
+                                    e.Style.CellValue = grupCustomer.nama_grup;
                                     break;
 
                                 case 3:
                                     e.Style.HorizontalAlignment = GridHorizontalAlignment.Center;
-                                    e.Style.CellValue = golongan.persentase_keuntungan;
-                                    break;
-
-                                case 4:
-                                    e.Style.HorizontalAlignment = GridHorizontalAlignment.Center;
-                                    e.Style.CellValue = golongan.diskon;
+                                    e.Style.CellValue = grupCustomer.deskripsi;
                                     break;
 
                                 default:
@@ -124,9 +118,9 @@ namespace OpenRetailGo.Referensi
         {
             using (new StCursor(Cursors.WaitCursor, new TimeSpan(0, 0, 0, 0)))
             {
-                _listOfGolongan = _bll.GetAll();
+                _listOfCrupCustomer = _bll.GetAll();
 
-                GridListControlHelper.Refresh<Golongan>(this.gridList, _listOfGolongan);
+                GridListControlHelper.Refresh<GrupCustomer>(this.gridList, _listOfCrupCustomer);
             }
 
             ResetButton();
@@ -134,12 +128,12 @@ namespace OpenRetailGo.Referensi
 
         private void ResetButton()
         {
-            base.SetActiveBtnPerbaikiAndHapus(_listOfGolongan.Count > 0);
+            base.SetActiveBtnPerbaikiAndHapus(_listOfCrupCustomer.Count > 0);
         }
 
         protected override void Tambah()
         {
-            var frm = new FrmEntryGolongan("Tambah Data " + this.TabText, _bll);
+            var frm = new FrmEntryGrupCustomer("Tambah Data " + this.TabText, _bll);
             frm.Listener = this;
             frm.ShowDialog();
         }
@@ -151,9 +145,9 @@ namespace OpenRetailGo.Referensi
             if (!base.IsSelectedItem(index, this.Text))
                 return;
 
-            var golongan = _listOfGolongan[index];
+            var grupCustomer = _listOfCrupCustomer[index];
 
-            var frm = new FrmEntryGolongan("Edit Data " + this.TabText, golongan, _bll);
+            var frm = new FrmEntryGrupCustomer("Edit Data " + this.TabText, grupCustomer, _bll);
             frm.Listener = this;
             frm.ShowDialog();
         }
@@ -167,14 +161,14 @@ namespace OpenRetailGo.Referensi
 
             if (MsgHelper.MsgDelete())
             {
-                var golongan = _listOfGolongan[index];
+                var grupCustomer = _listOfCrupCustomer[index];
 
                 using (new StCursor(Cursors.WaitCursor, new TimeSpan(0, 0, 0, 0)))
                 {
-                    var result = _bll.Delete(golongan);
+                    var result = _bll.Delete(grupCustomer);
                     if (result > 0)
                     {
-                        GridListControlHelper.RemoveObject<Golongan>(this.gridList, _listOfGolongan, golongan);
+                        GridListControlHelper.RemoveObject<GrupCustomer>(this.gridList, _listOfCrupCustomer, grupCustomer);
                         ResetButton();
                     }
                     else
@@ -185,16 +179,16 @@ namespace OpenRetailGo.Referensi
 
         protected override void OpenFileMaster()
         {
-            var msg = "Untuk membuka file master Golongan membutuhkan Ms Excel versi 2007 atau yang terbaru.\n\n" +
+            var msg = "Untuk membuka file master GrupCustomer membutuhkan Ms Excel versi 2007 atau yang terbaru.\n\n" +
                       "Apakah proses ingin dilanjutkan ?";
 
             if (MsgHelper.MsgKonfirmasi(msg))
             {
-                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_golongan.xlsx";
+                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_grupcustomer.xlsx";
 
                 if (!File.Exists(fileMaster))
                 {
-                    MsgHelper.MsgWarning("Maaf file master Golongan tidak ditemukan.");
+                    MsgHelper.MsgWarning("Maaf file master GrupCustomer tidak ditemukan.");
                     return;
                 }
 
@@ -204,7 +198,7 @@ namespace OpenRetailGo.Referensi
                 }
                 catch
                 {
-                    msg = "Gagal membuka file master Golongan !!!.\n\n" +
+                    msg = "Gagal membuka file master GrupCustomer !!!.\n\n" +
                           "Cek apakah Ms Excel versi 2007 atau yang terbaru sudah terinstall ?";
 
                     MsgHelper.MsgError(msg);
@@ -214,7 +208,7 @@ namespace OpenRetailGo.Referensi
 
         protected override void ImportData()
         {
-            var frm = new FrmImportDataGolongan("Import Data Golongan dari File Excel");
+            var frm = new FrmImportDataGrupCustomer("Import Data GrupCustomer dari File Excel");
             frm.Listener = this;
             frm.ShowDialog();
         }
@@ -224,15 +218,15 @@ namespace OpenRetailGo.Referensi
             using (var dlgSave = new SaveFileDialog())
             {
                 dlgSave.Filter = "Microsoft Excel files (*.xlsx)|*.xlsx";
-                dlgSave.Title = "Export Data Golongan";
+                dlgSave.Title = "Export Data GrupCustomer";
 
                 var result = dlgSave.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     using (new StCursor(Cursors.WaitCursor, new TimeSpan(0, 0, 0, 0)))
                     {
-                        IImportExportDataBll<Golongan> _importDataBll = new ImportExportDataGolonganBll(dlgSave.FileName, _log);
-                        _importDataBll.Export(_listOfGolongan);
+                        IImportExportDataBll<GrupCustomer> _importDataBll = new ImportExportDataGrupCustomerBll(dlgSave.FileName, _log);
+                        _importDataBll.Export(_listOfCrupCustomer);
                     }
                 }
             }
@@ -240,7 +234,7 @@ namespace OpenRetailGo.Referensi
 
         public void Ok(object sender, object data)
         {
-            if (sender is FrmImportDataGolongan)
+            if (sender is FrmImportDataGrupCustomer)
             {
                 LoadData(); // refresh data setelah import dari file excel
             }
@@ -248,15 +242,15 @@ namespace OpenRetailGo.Referensi
 
         public void Ok(object sender, bool isNewData, object data)
         {
-            var golongan = (Golongan)data;
+            var grupCustomer = (GrupCustomer)data;
 
             if (isNewData)
             {
-                GridListControlHelper.AddObject<Golongan>(this.gridList, _listOfGolongan, golongan);
+                GridListControlHelper.AddObject<GrupCustomer>(this.gridList, _listOfCrupCustomer, grupCustomer);
                 ResetButton();
             }
             else
-                GridListControlHelper.UpdateObject<Golongan>(this.gridList, _listOfGolongan, golongan);
+                GridListControlHelper.UpdateObject<GrupCustomer>(this.gridList, _listOfCrupCustomer, grupCustomer);
         }
     }
 }

@@ -50,6 +50,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSupplier = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCustomer = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuGrupCustomer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDropshipper = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuJabatan = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,7 +111,10 @@
             this.mnuBantuan = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPetunjukPenggunaan = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSeparatorBantuan1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuKirimSaran = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRegistrasi = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBantuanTeknis = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCekUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSeparatorBantuan2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuKeluar = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,9 +138,6 @@
             this.tbLapPembelianProduk = new System.Windows.Forms.ToolStripButton();
             this.tbLapPenjualanProduk = new System.Windows.Forms.ToolStripButton();
             this.mainDock = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.mnuKirimSaran = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBantuanTeknis = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCekUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStripEx1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -250,6 +251,7 @@
             this.toolStripSeparator1,
             this.mnuSupplier,
             this.mnuCustomer,
+            this.mnuGrupCustomer,
             this.mnuDropshipper,
             this.toolStripSeparator2,
             this.mnuJabatan,
@@ -333,6 +335,14 @@
             this.mnuCustomer.Tag = "FrmListCustomer";
             this.mnuCustomer.Text = "Customer";
             this.mnuCustomer.Click += new System.EventHandler(this.mnuCustomer_Click);
+            // 
+            // mnuGrupCustomer
+            // 
+            this.mnuGrupCustomer.Name = "mnuGrupCustomer";
+            this.mnuGrupCustomer.Size = new System.Drawing.Size(222, 22);
+            this.mnuGrupCustomer.Tag = "FrmListGrupCustomer";
+            this.mnuGrupCustomer.Text = "Grup Customer";
+            this.mnuGrupCustomer.Click += new System.EventHandler(this.mnuGrupCustomer_Click);
             // 
             // mnuDropshipper
             // 
@@ -825,12 +835,31 @@
             this.tsSeparatorBantuan1.Name = "tsSeparatorBantuan1";
             this.tsSeparatorBantuan1.Size = new System.Drawing.Size(188, 6);
             // 
+            // mnuKirimSaran
+            // 
+            this.mnuKirimSaran.Name = "mnuKirimSaran";
+            this.mnuKirimSaran.Size = new System.Drawing.Size(191, 22);
+            this.mnuKirimSaran.Text = "Kirim Saran";
+            // 
             // mnuRegistrasi
             // 
             this.mnuRegistrasi.Name = "mnuRegistrasi";
             this.mnuRegistrasi.Size = new System.Drawing.Size(191, 22);
             this.mnuRegistrasi.Text = "Registrasi";
             this.mnuRegistrasi.Click += new System.EventHandler(this.mnuRegistrasi_Click);
+            // 
+            // mnuBantuanTeknis
+            // 
+            this.mnuBantuanTeknis.Name = "mnuBantuanTeknis";
+            this.mnuBantuanTeknis.Size = new System.Drawing.Size(191, 22);
+            this.mnuBantuanTeknis.Text = "Bantuan Teknis";
+            // 
+            // mnuCekUpdate
+            // 
+            this.mnuCekUpdate.Name = "mnuCekUpdate";
+            this.mnuCekUpdate.Size = new System.Drawing.Size(191, 22);
+            this.mnuCekUpdate.Text = "Cek Update";
+            this.mnuCekUpdate.Click += new System.EventHandler(this.mnuCekUpdateTerbaru_Click);
             // 
             // tsSeparatorBantuan2
             // 
@@ -856,14 +885,14 @@
             // mnuGantiUser
             // 
             this.mnuGantiUser.Name = "mnuGantiUser";
-            this.mnuGantiUser.Size = new System.Drawing.Size(180, 22);
+            this.mnuGantiUser.Size = new System.Drawing.Size(174, 22);
             this.mnuGantiUser.Text = "Ganti User";
             this.mnuGantiUser.Click += new System.EventHandler(this.mnuGantiUser_Click);
             // 
             // mnuKeluarDariProgram
             // 
             this.mnuKeluarDariProgram.Name = "mnuKeluarDariProgram";
-            this.mnuKeluarDariProgram.Size = new System.Drawing.Size(180, 22);
+            this.mnuKeluarDariProgram.Size = new System.Drawing.Size(174, 22);
             this.mnuKeluarDariProgram.Text = "Keluar dari Aplikasi";
             this.mnuKeluarDariProgram.Click += new System.EventHandler(this.mnuKeluarDariProgram_Click);
             // 
@@ -1043,25 +1072,6 @@
             this.mainDock.TabIndex = 14;
             this.mainDock.ActiveContentChanged += new System.EventHandler(this.mainDock_ActiveContentChanged);
             // 
-            // mnuKirimSaran
-            // 
-            this.mnuKirimSaran.Name = "mnuKirimSaran";
-            this.mnuKirimSaran.Size = new System.Drawing.Size(191, 22);
-            this.mnuKirimSaran.Text = "Kirim Saran";
-            // 
-            // mnuBantuanTeknis
-            // 
-            this.mnuBantuanTeknis.Name = "mnuBantuanTeknis";
-            this.mnuBantuanTeknis.Size = new System.Drawing.Size(191, 22);
-            this.mnuBantuanTeknis.Text = "Bantuan Teknis";
-            // 
-            // mnuCekUpdate
-            // 
-            this.mnuCekUpdate.Name = "mnuCekUpdate";
-            this.mnuCekUpdate.Size = new System.Drawing.Size(191, 22);
-            this.mnuCekUpdate.Text = "Cek Update";
-            this.mnuCekUpdate.Click += new System.EventHandler(this.mnuCekUpdateTerbaru_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1201,5 +1211,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuKirimSaran;
         private System.Windows.Forms.ToolStripMenuItem mnuBantuanTeknis;
         private System.Windows.Forms.ToolStripMenuItem mnuCekUpdate;
+        private System.Windows.Forms.ToolStripMenuItem mnuGrupCustomer;
     }
 }

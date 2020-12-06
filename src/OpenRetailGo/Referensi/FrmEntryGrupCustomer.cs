@@ -26,15 +26,15 @@ using ConceptCave.WaitCursor;
 
 namespace OpenRetailGo.Referensi
 {
-    public partial class FrmEntryGolongan : FrmEntryStandard
+    public partial class FrmEntryGrupCustomer : FrmEntryStandard
     {
-        private IGolonganBll _bll = null; // deklarasi objek business logic layer 
-        private Golongan _golongan = null;
+        private IGrupCustomerBll _bll = null; // deklarasi objek business logic layer 
+        private GrupCustomer _grupCustomer = null;
         private bool _isNewData = false;
 
         public IListener Listener { private get; set; }
 
-        public FrmEntryGolongan(string header, IGolonganBll bll)
+        public FrmEntryGrupCustomer(string header, IGrupCustomerBll bll)
             : base()
         {
             InitializeComponent();
@@ -46,7 +46,7 @@ namespace OpenRetailGo.Referensi
             this._isNewData = true;
         }
 
-        public FrmEntryGolongan(string header, Golongan golongan, IGolonganBll bll)
+        public FrmEntryGrupCustomer(string header, GrupCustomer grupCustomer, IGrupCustomerBll bll)
             : base()
         {
             InitializeComponent();
@@ -55,27 +55,19 @@ namespace OpenRetailGo.Referensi
             base.SetHeader(header);
             base.SetButtonSelesaiToBatal();
             this._bll = bll;
-            this._golongan = golongan;
+            this._grupCustomer = grupCustomer;
 
-            if (this._golongan.tipe) rbBarang.Checked = true;
-            else rbJasa.Checked = true;
-
-            txtGolongan.Text = this._golongan.nama_golongan;
-            txtKeuntungan.Text = this._golongan.persentase_keuntungan.ToString();
-            txtDiskon.Text = this._golongan.diskon.ToString();
+            txtNamaGrup.Text = this._grupCustomer.nama_grup;
+            txtDeskripsi.Text = this._grupCustomer.deskripsi;
         }
 
         protected override void Simpan()
         {
             if (_isNewData)
-                _golongan = new Golongan();
+                _grupCustomer = new GrupCustomer();
 
-            if (rbBarang.Checked) _golongan.tipe = true;
-            else _golongan.tipe = false;
-
-            _golongan.nama_golongan = txtGolongan.Text;
-            _golongan.persentase_keuntungan = NumberHelper.StringToDouble(txtKeuntungan.Text, true);
-            _golongan.diskon = NumberHelper.StringToDouble(txtDiskon.Text, true);
+            _grupCustomer.nama_grup = txtNamaGrup.Text;
+            _grupCustomer.deskripsi = txtDeskripsi.Text;
 
             var result = 0;
             var validationError = new ValidationError();
@@ -83,19 +75,18 @@ namespace OpenRetailGo.Referensi
             using (new StCursor(Cursors.WaitCursor, new TimeSpan(0, 0, 0, 0)))
             {
                 if (_isNewData)
-                    result = _bll.Save(_golongan, ref validationError);
+                    result = _bll.Save(_grupCustomer, ref validationError);
                 else
-                    result = _bll.Update(_golongan, ref validationError);
+                    result = _bll.Update(_grupCustomer, ref validationError);
 
                 if (result > 0)
                 {
-                    Listener.Ok(this, _isNewData, _golongan);
+                    Listener.Ok(this, _isNewData, _grupCustomer);
 
                     if (_isNewData)
                     {
                         base.ResetForm(this);
-                        rbBarang.Checked = true;
-                        txtGolongan.Focus();
+                        txtNamaGrup.Focus();
 
                     }
                     else
@@ -113,28 +104,6 @@ namespace OpenRetailGo.Referensi
                         MsgHelper.MsgUpdateError();
                 }
             }                            
-        }
-
-        private void txtDiskon_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (KeyPressHelper.IsEnter(e))
-                Simpan();
-        }
- 
-        private void rbBarangJasa_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbBarang.Checked)
-            {
-                txtKeuntungan.ReadOnly = false;
-                txtDiskon.ReadOnly = false;
-            } else
-            {
-                txtKeuntungan.Text = string.Empty;
-                txtKeuntungan.ReadOnly = true;
-
-                txtDiskon.Text = string.Empty;
-                txtDiskon.ReadOnly = true;
-            }
         }
     }
 }

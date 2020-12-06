@@ -49,6 +49,7 @@ namespace OpenRetailGo.Main
         private FrmListPenyesuaianStok _frmListPenyesuaianStok;
 
         private FrmListCustomer _frmListCustomer;
+        private FrmListGrupCustomer _frmListGrupCustomer;
         private FrmListSupplier _frmListSupplier;
         private FrmListDropshipper _frmListDropshipper;
 
@@ -384,6 +385,11 @@ namespace OpenRetailGo.Main
         private void mnuCustomer_Click(object sender, EventArgs e)
         {
             ShowForm<FrmListCustomer>(sender, ref _frmListCustomer);
+        }
+
+        private void mnuGrupCustomer_Click(object sender, EventArgs e)
+        {
+            ShowForm<FrmListGrupCustomer>(sender, ref _frmListGrupCustomer);
         }
 
         private void mnuJabatan_Click(object sender, EventArgs e)
