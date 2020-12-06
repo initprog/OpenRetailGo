@@ -1,0 +1,46 @@
+
+
+--SELECT uuid_generate_v4();
+--CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+delete from m_menu where menu_id = '07b24b4b-cf52-4b3c-ab06-51f7312e4813';
+
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('f18fbb6e-bd6f-5d21-fa8d-11923327b436', 'mnuKartu', 'Kartu', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 10, true, 'FrmListKartu', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('8a8c6d23-963b-4819-819d-b9cdeaad7718', 'mnuGolongan', 'Golongan', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 20, true, 'FrmListGolongan', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('8a0ba72f-67d2-481f-9e10-a188f09effa5', 'mnuProduk', 'Produk', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 30, true, 'FrmListProduk', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('7cca3d24-3fc3-4c64-b361-78c0c7581920', 'mnuCetakLabelHargaProduk', 'Cetak Label Harga Produk', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 40, true, 'FrmCetakLabelHargaProduk', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('fa7e83ee-9b49-4cda-badd-d68cda7b7a9a', 'mnuCetakLabelBarcodeProduk', 'Cetak Label Barcode Produk', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 50, true, 'FrmCetakLabelBarcodeProduk', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('95e9e230-c4f3-4fbc-9652-78cf4155d7ea', 'mnuPenyesuaianStok', 'Penyesuaian Stok', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 60, true, 'FrmListPenyesuaianStok', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('fd48562f-9096-4cec-ad9c-37229fc072a3', 'mnuSupplier', 'Supplier', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 70, true, 'FrmListSupplier', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('5ab9c82d-a116-4032-8891-cbfb7b71b8e3', 'mnuCustomer', 'Customer', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 80, true, 'FrmListCustomer', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('b06407d2-e71e-4231-8aed-0f4dc70031e9', 'mnuGrupCustomer', 'Grup Customer', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 90, true, 'FrmListGrupCustomer', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('7c7a2763-ed8b-41a7-a42d-b79233d02e02', 'mnuDropshipper', 'Dropshipper', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 100, true, 'FrmListDropshipper', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('e7be0d85-9f96-4095-be35-1da049028cef', 'mnuJabatan', 'Jabatan', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 110, true, 'FrmListJabatan', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('b7ade8cc-22aa-43c8-be9c-af6cb71d11a6', 'mnuKaryawan', 'Karyawan', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 120, true, 'FrmListKaryawan', true);
+INSERT INTO public.m_menu
+(menu_id, nama_menu, judul_menu, parent_id, order_number, is_active, nama_form, is_enabled)
+VALUES('b52e8eac-3bf6-4ebf-95a0-46ab9e7b0888', 'mnuJenisPengeluaran', 'Jenis Pengeluaran', '07b24b4b-cf52-4b3c-ab06-51f7312e4813', 130, true, 'FrmListJenisPengeluaran', true);
