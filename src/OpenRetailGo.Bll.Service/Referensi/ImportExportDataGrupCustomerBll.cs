@@ -175,7 +175,7 @@ namespace OpenRetailGo.Bll.Service
                 using (var wb = new XLWorkbook())
                 {
                     // Adding a worksheet
-                    var ws = wb.Worksheets.Add("grup customer");
+                    var ws = wb.Worksheets.Add("grup pelanggan");
 
                     // Set header table
                     ws.Cell(1, 1).Value = "NO";

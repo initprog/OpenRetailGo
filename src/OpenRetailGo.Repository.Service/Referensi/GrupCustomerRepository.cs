@@ -80,7 +80,7 @@ namespace OpenRetailGo.Repository.Service
             try
             {
                 oList = _context.db.GetAll<GrupCustomer>()
-                                .OrderBy(f => f.nama_grup)
+                                .OrderBy(f => f.seqno)
                                 .ToList();
             }
             catch (Exception ex)
@@ -133,13 +133,25 @@ namespace OpenRetailGo.Repository.Service
             return result;
         }
 
-        public int Delete(GrupCustomer obj)
+        /// <summary>
+        /// Delete record pelanggan.
+        /// </summary>
+        /// <param name="obj">Record pelanggan</param>
+        /// <param name="softDelete">Kalau true, jangan hapus recordnya tapi set isAktif=false. Kalau false, delete recordnya.</param>
+        /// <returns>Berapa record yg dihapus atau di update.</returns>
+        public int Delete(GrupCustomer obj, bool softDelete = true)
         {
             var result = 0;
             
             try
             {
-                result = _context.db.Delete<GrupCustomer>(obj) ? 1 : 0;
+                if (softDelete)
+                {
+                    obj.is_aktif = false;
+                    result = Update(obj);
+                }
+                else
+                    result = _context.db.Delete<GrupCustomer>(obj) ? 1 : 0;
             }
             catch (Exception ex)
             {

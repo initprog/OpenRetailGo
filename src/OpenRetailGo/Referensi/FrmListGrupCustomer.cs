@@ -71,7 +71,7 @@ namespace OpenRetailGo.Referensi
             var gridListProperties = new List<GridListControlProperties>();
 
             gridListProperties.Add(new GridListControlProperties { Header = "No", Width = 30 });
-            gridListProperties.Add(new GridListControlProperties { Header = "Nama Grup Customer", Width = 400 });
+            gridListProperties.Add(new GridListControlProperties { Header = "Nama Grup Pelanggan", Width = 400 });
             gridListProperties.Add(new GridListControlProperties { Header = "Deskripsi", Width = 700 });
 
             GridListControlHelper.InitializeGridListControl<GrupCustomer>(this.gridList, _listOfCrupCustomer, gridListProperties);

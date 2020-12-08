@@ -55,9 +55,9 @@
             this.lblNamaGrup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNamaGrup.Location = new System.Drawing.Point(33, 15);
             this.lblNamaGrup.Name = "lblNamaGrup";
-            this.lblNamaGrup.Size = new System.Drawing.Size(127, 15);
+            this.lblNamaGrup.Size = new System.Drawing.Size(130, 15);
             this.lblNamaGrup.TabIndex = 0;
-            this.lblNamaGrup.Text = "Nama Grup Customer";
+            this.lblNamaGrup.Text = "Nama Grup Pelanggan";
             this.lblNamaGrup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtDeskripsi
@@ -107,7 +107,7 @@
             // lblReq
             // 
             this.lblReq.ForeColor = System.Drawing.Color.Red;
-            this.lblReq.Location = new System.Drawing.Point(157, 15);
+            this.lblReq.Location = new System.Drawing.Point(161, 15);
             this.lblReq.Name = "lblReq";
             this.lblReq.Size = new System.Drawing.Size(10, 15);
             this.lblReq.TabIndex = 5;

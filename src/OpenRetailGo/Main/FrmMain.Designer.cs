@@ -325,7 +325,7 @@
             this.mnuSupplier.Name = "mnuSupplier";
             this.mnuSupplier.Size = new System.Drawing.Size(222, 22);
             this.mnuSupplier.Tag = "FrmListSupplier";
-            this.mnuSupplier.Text = "Supplier";
+            this.mnuSupplier.Text = "Pemasok";
             this.mnuSupplier.Click += new System.EventHandler(this.mnuSupplier_Click);
             // 
             // mnuCustomer
@@ -333,7 +333,7 @@
             this.mnuCustomer.Name = "mnuCustomer";
             this.mnuCustomer.Size = new System.Drawing.Size(222, 22);
             this.mnuCustomer.Tag = "FrmListCustomer";
-            this.mnuCustomer.Text = "Customer";
+            this.mnuCustomer.Text = "Pelanggan";
             this.mnuCustomer.Click += new System.EventHandler(this.mnuCustomer_Click);
             // 
             // mnuGrupCustomer
@@ -341,7 +341,7 @@
             this.mnuGrupCustomer.Name = "mnuGrupCustomer";
             this.mnuGrupCustomer.Size = new System.Drawing.Size(222, 22);
             this.mnuGrupCustomer.Tag = "FrmListGrupCustomer";
-            this.mnuGrupCustomer.Text = "Grup Customer";
+            this.mnuGrupCustomer.Text = "Grup Pelanggan";
             this.mnuGrupCustomer.Click += new System.EventHandler(this.mnuGrupCustomer_Click);
             // 
             // mnuDropshipper

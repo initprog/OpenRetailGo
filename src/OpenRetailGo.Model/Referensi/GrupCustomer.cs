@@ -29,6 +29,10 @@ namespace OpenRetailGo.Model
 		public string nama_grup { get; set; }
 		
 		public string deskripsi { get; set; }
+
+        public int seqno { get; set; }
+
+        public bool is_aktif { get; set; }
 	}
 
     public class GrupCustomerValidator : AbstractValidator<GrupCustomer>

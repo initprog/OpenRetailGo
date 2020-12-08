@@ -31,7 +31,7 @@ namespace OpenRetailGo.Referensi
 {
     public partial class FrmImportDataGrupCustomer : FrmDialogImport
     {
-        private const string ImportTitle = "Grup Customer";
+        private const string ImportTitle = "Grup Pelanggan";
         private ILog _log;
 
         public IListener Listener { private get; set; }
