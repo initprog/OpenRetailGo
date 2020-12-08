@@ -107,7 +107,7 @@
             // lblReq
             // 
             this.lblReq.ForeColor = System.Drawing.Color.Red;
-            this.lblReq.Location = new System.Drawing.Point(161, -357);
+            this.lblReq.Location = new System.Drawing.Point(157, 15);
             this.lblReq.Name = "lblReq";
             this.lblReq.Size = new System.Drawing.Size(10, 15);
             this.lblReq.TabIndex = 5;
