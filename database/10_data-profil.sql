@@ -16,7 +16,7 @@ SET search_path = public, pg_catalog;
 --
 
 COPY m_profil (profil_id, nama_profil, alamat, kota, telepon, email, website, register_id, is_register, hash) FROM stdin;
-ced140f5-52f5-4617-b8c0-ebb5cae2c769	KR Software	Jl. Raya Berbah	Yogyakarta	0813 8176 9915	rudi.krsoftware@gmail.com	https://github.com/rudi-krsoftware/open-retail/	\N	f	\N
+ced140f5-52f5-4617-b8c0-ebb5cae2c769	Contoso	Jl. Virtual Company No. 536	Surabaya	0815 536 5360	initprog@proginit.com	https://github.com/initprog/openretailgo/	\N	f	\N
 \.
 
 
