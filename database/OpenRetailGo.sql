@@ -4163,6 +4163,28 @@ CREATE TABLE public.c_grup_customer (
 	CONSTRAINT c_grup_customer_pk PRIMARY KEY (grup_customer_id)
 );
 
+CREATE OR REPLACE FUNCTION public.f_grup_customer_seqno()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	NEW.seqno := NEW.grup_customer_id * 10;
+	RETURN NEW;
+END;
+$function$
+;
+COMMENT ON FUNCTION public.f_grup_customer_seqno()
+    IS 'Set seqno to grup_customer_id * 10 as default value on insert.';
+
+CREATE TRIGGER grup_customer_seqno
+    AFTER INSERT
+    ON public.c_grup_customer
+    FOR EACH ROW
+        EXECUTE PROCEDURE public.f_grup_customer_seqno();
+
+COMMENT ON TRIGGER grup_customer_seqno ON public.c_grup_customer
+    IS 'Set seqno to grup_customer_id * 10 as default value on insert.';
+
 -- ----------------------------------------------------------------------------
 -- PRODUK PAKETAN
 -- ----------------------------------------------------------------------------
@@ -4172,12 +4194,12 @@ CREATE TABLE public.m_produk_paketan (
 	produk_id t_guid NOT NULL,
     subproduk_id t_guid NOT NULL,
 	qty int4 NOT NULL DEFAULT 1,
+    seqno int2 NULL DEFAULT 10,
+	is_aktif bool NULL DEFAULT false,
 	CONSTRAINT m_produk_paketan_pk PRIMARY KEY (produk_paketan_id, produk_id)
 );
 
-
 -- public.m_produk_paketan foreign keys
-
 ALTER TABLE public.m_produk_paketan ADD CONSTRAINT m_produk_paketan_fk FOREIGN KEY (subproduk_id) REFERENCES m_produk(produk_id);
 
 -- ----------------------------------------------------------------------------
