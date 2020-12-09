@@ -203,9 +203,30 @@ namespace OpenRetailGo.Bll.Service
                 using (IDapperContext context = new DapperContext())
                 {
                     GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
-                    result = repo.Delete(obj);
+                    result = repo.Delete(obj, true);
                 }
             }            
+
+            return result;
+        }
+
+        public int SoftDelete(GrupCustomer obj)
+        {            
+            var result = 0;
+
+            if (_isUseWebAPI)
+            {
+                //_unitOfWork = new UnitOfWork(_isUseWebAPI, _baseUrl, _log);
+                //result = _unitOfWork.GrupCustomerRepository.Delete(obj);
+            }
+            else
+            {
+                using (IDapperContext context = new DapperContext())
+                {
+                    GrupCustomerRepository repo = new GrupCustomerRepository(context, _log);
+                    result = repo.Delete(obj, true);
+                }
+            }
 
             return result;
         }

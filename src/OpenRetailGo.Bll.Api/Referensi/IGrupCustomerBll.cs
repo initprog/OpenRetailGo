@@ -28,5 +28,6 @@ namespace OpenRetailGo.Bll.Api
 
 		int Save(GrupCustomer obj, ref ValidationError validationError);
 		int Update(GrupCustomer obj, ref ValidationError validationError);
+        int SoftDelete(GrupCustomer obj);
     }
 }     

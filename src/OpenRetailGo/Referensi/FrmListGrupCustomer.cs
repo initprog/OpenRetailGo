@@ -42,10 +42,10 @@ namespace OpenRetailGo.Referensi
         {
             InitializeComponent();
             this.btnImport.Visible = true;
-            this.toolTip1.SetToolTip(this.btnImport, "Import/Export Data GrupCustomer");
-            this.mnuBukaFileMaster.Text = "Buka File Master GrupCustomer";
-            this.mnuImportFileMaster.Text = "Import File Master GrupCustomer";
-            this.mnuExportData.Text = "Export Data GrupCustomer";
+            this.toolTip1.SetToolTip(this.btnImport, "Import/Export Data Grup Pelanggan");
+            this.mnuBukaFileMaster.Text = "Buka File Master Grup Pelanggan";
+            this.mnuImportFileMaster.Text = "Import File Master Grup Pelanggan";
+            this.mnuExportData.Text = "Export Data Grup Pelanggan";
 
             _log = MainProgram.log;
             _bll = new GrupCustomerBll(MainProgram.isUseWebAPI, MainProgram.baseUrl, _log);
@@ -164,7 +164,7 @@ namespace OpenRetailGo.Referensi
 
                 using (new StCursor(Cursors.WaitCursor, new TimeSpan(0, 0, 0, 0)))
                 {
-                    var result = _bll.Delete(grupCustomer);
+                    var result = _bll.SoftDelete(grupCustomer);
                     if (result > 0)
                     {
                         GridListControlHelper.RemoveObject<GrupCustomer>(this.gridList, _listOfCrupCustomer, grupCustomer);
@@ -183,11 +183,11 @@ namespace OpenRetailGo.Referensi
 
             if (MsgHelper.MsgKonfirmasi(msg))
             {
-                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_grupcustomer.xlsx";
+                var fileMaster = Utils.GetAppPath() + @"\File Import Excel\Master Data\data_grup_pelanggan.xlsx";
 
                 if (!File.Exists(fileMaster))
                 {
-                    MsgHelper.MsgWarning("Maaf file master GrupCustomer tidak ditemukan.");
+                    MsgHelper.MsgWarning("Maaf file master Grup Pelanggan tidak ditemukan.");
                     return;
                 }
 
@@ -197,7 +197,7 @@ namespace OpenRetailGo.Referensi
                 }
                 catch
                 {
-                    msg = "Gagal membuka file master GrupCustomer !!!.\n\n" +
+                    msg = "Gagal membuka file master Grup Pelanggan !!!.\n\n" +
                           "Cek apakah Ms Excel versi 2007 atau yang terbaru sudah terinstall ?";
 
                     MsgHelper.MsgError(msg);
@@ -207,7 +207,7 @@ namespace OpenRetailGo.Referensi
 
         protected override void ImportData()
         {
-            var frm = new FrmImportDataGrupCustomer("Import Data GrupCustomer dari File Excel");
+            var frm = new FrmImportDataGrupCustomer("Import Data Grup Pelanggan dari File Excel");
             frm.Listener = this;
             frm.ShowDialog();
         }
@@ -217,7 +217,7 @@ namespace OpenRetailGo.Referensi
             using (var dlgSave = new SaveFileDialog())
             {
                 dlgSave.Filter = "Microsoft Excel files (*.xlsx)|*.xlsx";
-                dlgSave.Title = "Export Data GrupCustomer";
+                dlgSave.Title = "Export Data Grup Pelanggan";
 
                 var result = dlgSave.ShowDialog();
                 if (result == DialogResult.OK)

@@ -133,6 +133,21 @@ namespace OpenRetailGo.Repository.Service
             return result;
         }
 
+        public int Delete(GrupCustomer obj)
+        {
+            var result = 0;
+
+            try
+            {
+                result = _context.db.Delete<GrupCustomer>(obj) ? 1 : 0;
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error:", ex);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Delete record pelanggan.
         /// </summary>
@@ -151,7 +166,7 @@ namespace OpenRetailGo.Repository.Service
                     result = Update(obj);
                 }
                 else
-                    result = _context.db.Delete<GrupCustomer>(obj) ? 1 : 0;
+                    result = Delete(obj);
             }
             catch (Exception ex)
             {
