@@ -20,19 +20,20 @@ using KeyAttribute = Dapper.Contrib.Extensions.KeyAttribute;
 
 namespace OpenRetailGo.Model
 {
-    [Table("c_grup_customer")]
-    public class GrupCustomer
+    [Table("customergroup")]
+    public class CustomerGroup
     {
  		[Key]
-		public int grup_customer_id { get; set; }
+		public int customergroupid { get; set; }
+
+        [Display(Name = "Nama Grup")]
+        public string name { get; set; }
 		
-		public string nama_grup { get; set; }
-		
-		public string deskripsi { get; set; }
+		public string description { get; set; }
 
         public int seqno { get; set; }
 
-        public bool is_aktif { get; set; }
+        public bool isactive { get; set; }
 	}
 
     public class GrupCustomerValidator : AbstractValidator<GrupCustomer>
@@ -44,7 +45,7 @@ namespace OpenRetailGo.Model
 			var msgError1 = "'{PropertyName}' tidak boleh kosong !";
             var msgError2 = "Inputan '{PropertyName}' maksimal {MaxLength} karakter !";
 
-            RuleFor(c => c.nama_grup).NotEmpty().WithMessage(msgError1).Length(1, 30).WithMessage(msgError2);
+            RuleFor(c => c.name).NotEmpty().WithMessage(msgError1).Length(1, 30).WithMessage(msgError2);
 		}
 	}
 }
